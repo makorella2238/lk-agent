@@ -1,0 +1,55 @@
+.gradientText {
+  @apply bg-gradient-to-r from-blue-600 via-green-500 to-indigo-400 text-transparent bg-clip-text
+}
+
+.buttonYel {
+  @apply mt-3 w-full outline outline-yellow-300 outline-offset-2 py-2 px-2 bg-yellow-300/80 bg-opacity-60 rounded-2xl transition-colors hover:bg-opacity-90 hover:bg-yellow-200
+}
+.buttonRed {
+  @apply mt-3 w-full outline outline-red-400 outline-offset-2 py-2 px-2 bg-red-500 bg-opacity-75 rounded-2xl transition-colors hover:bg-opacity-100 hover:bg-red-600
+}
+.buttonGreen {
+  @apply mt-3 w-full outline outline-green-300 outline-offset-2 py-2 px-2 bg-green-600 bg-opacity-75 rounded-2xl transition-colors hover:bg-opacity-100 hover:bg-green-500
+}
+
+.BaseButton {
+  border-radius: 10px;
+  padding: 5px 10px;
+  border: none;
+  background-color: rgb(120, 196, 157);
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(66, 118, 196, 0.3);
+  margin-top: 10px;
+  transition: all 0.3s ease-in-out;
+}
+
+.BaseButton:hover {
+  background-color: rgb(92, 160, 131);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: scale(1.1);
+}
+
+.BaseButton:active {
+  transform: scale(0.9);
+}
+
+.BaseButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(71, 186, 164);
+}
+
+.fadeIn {
+  animation: fadeIn ease-in-out .8s;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

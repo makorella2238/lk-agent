@@ -1,0 +1,7 @@
+.borderContainer {
+    @apply px-2 py-1 text-lg text-gray-700 mb-2 border-2
+}
+
+.bodyText {
+    @apply font-bold text-emerald-600
+}
