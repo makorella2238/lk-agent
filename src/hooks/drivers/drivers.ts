@@ -23,6 +23,7 @@ export const useGetAllDrivers = (offset: number, count: number) => {
     return useQuery<IAllDrivers>({
             queryKey: ['getAllDrivers'],
             queryFn: async () => {
+                // @ts-ignore
                 return await mainService.getAllDrivers({offset, count, idAgent});
             }
         }

@@ -86,7 +86,7 @@ export const mainService = {
         return data;
     },
 
-    async createNewCar(requestData: ICarInfo) {
+    async createNewCar(requestData: ICarInfo, driverId: string) {
         const formData = new FormData();
         //@ts-ignore
         formData.append('agentId', agentId);

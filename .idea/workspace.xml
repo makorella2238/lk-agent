@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c53af9a4-9bab-453f-b0b4-2e6e23d80dbd" name="Changes" comment="" />
+    <list default="true" id="c53af9a4-9bab-453f-b0b4-2e6e23d80dbd" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -46,15 +49,15 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "Merging master",
-    "last_opened_file_path": "D:/я и мой код/lk-agenta/src/components/EditDriver",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "D:/я и мой код/lk-agenta — копия",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "yarn",
     "settings.editor.selected.configurable": "reference.settings.ide.settings.web.browsers",
-    "ts.external.directory.path": "D:\\я и мой код\\lk-agenta\\node_modules\\typescript\\lib",
+    "ts.external.directory.path": "D:\\я и мой код\\lk-agenta — копия\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -196,7 +199,8 @@
       <workItem from="1708241508590" duration="9971000" />
       <workItem from="1708256813689" duration="812000" />
       <workItem from="1708257644813" duration="724000" />
-      <workItem from="1708258595915" duration="1931000" />
+      <workItem from="1708258595915" duration="2364000" />
+      <workItem from="1708262830745" duration="421000" />
     </task>
     <servers />
   </component>

@@ -42,7 +42,7 @@ const CreateNewCarModal = ({isCreateNewCarModal, setIsCreateNewCarModal}: Create
     const [requestErrors, setRequestErrors] = useState('')
     const handleCreateNewCar = useCreateNewCar(setRequestErrors)
     const onSubmit: SubmitHandler<ICarInfo> = (requestData) => {
-        handleCreateNewCar(requestData, params.driverId)
+        handleCreateNewCar(requestData, params.driverId as string)
         if (!requestErrors) {
             setIsCreateNewCarModal(false)
         }
