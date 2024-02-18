@@ -4,7 +4,7 @@ import DriversDetail from "@/components/screen/DriverDetail/DriversDetail";
 import {useSelector} from "react-redux";
 import {getIsAuth} from "@/Redux/app/app-selector";
 import {useParams, usePathname, useRouter} from "next/navigation";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import s from "@/components/ui/genetal-css/general.module.css";
 import {useGetCarInfo, useGetDriversInfo} from "@/hooks/drivers/drivers";
 import {IAddEditDriver} from "@/interfaces/types";
@@ -12,15 +12,16 @@ import Preloader from "@/components/Preloader/Preloader";
 import Cookies from "js-cookie";
 
 const DetailPage = () => {
-    const {push} = useRouter()
+    const router = useRouter()
     const token = Cookies.get('token')
-    if (!token) {
-        push('/login')
-    }
+    useEffect(() => {
+        if (!token) {
+            router.push('/login')
+        }
+    }, [token]);
 
     const params = useParams()
     const pathName = usePathname()
-    const router = useRouter()
 
     // @ts-ignore
     const {data: driverInfoData, isFetching: driverInfoFetching, error: driverInfoError} = useGetDriversInfo(params.driverId)

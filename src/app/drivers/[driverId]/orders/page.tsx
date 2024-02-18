@@ -6,15 +6,17 @@ import {getIsAuth} from "@/Redux/app/app-selector";
 import {useParams, useRouter} from "next/navigation";
 import {useGetAllOrders} from "@/hooks/drivers/drivers";
 import Preloader from "@/components/Preloader/Preloader";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 
 const DetailPage = () => {
-    const {push} = useRouter()
+    const router = useRouter()
     const token = Cookies.get('token')
-    if (!token) {
-        push('/login')
-    }
+    useEffect(() => {
+        if (!token) {
+            router.push('/login')
+        }
+    }, [token]);
 
     const params = useParams()
     const pageSize = 5; // Количество элементов на странице

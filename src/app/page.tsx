@@ -3,13 +3,17 @@
 import Home from "@/components/screen/Home/Home";
 import Cookies from "js-cookie";
 import {useRouter} from "next/navigation";
+import {useEffect} from "react";
 
 const HomePage = () => {
-    const {push} = useRouter()
+    const router = useRouter()
     const token = Cookies.get('token')
-    if (!token) {
-        push('/login')
-    }
+    useEffect(() => {
+        if (!token) {
+            router.push('/login')
+        }
+    }, [token]);
+
 
     return  (
         <div>

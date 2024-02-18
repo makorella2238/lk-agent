@@ -1,14 +1,23 @@
 'use client'
 
-import React from "react";
+import React, {useEffect} from "react";
 import Transactions from "@/components/screen/Transaction/Transaction";
 import {useSelector} from "react-redux";
 import {getIsAuth} from "@/Redux/app/app-selector";
 import {useParams, useRouter} from "next/navigation";
 import {useGetDriverTransactions} from "@/hooks/drivers/drivers";
 import Preloader from "@/components/Preloader/Preloader";
+import Cookies from "js-cookie";
 
 const TransactionsPage = () => {
+    const router = useRouter()
+    const token = Cookies.get('token')
+    useEffect(() => {
+        if (!token) {
+            router.push('/login')
+        }
+    }, [token]);
+
     const params = useParams()
 
     // @ts-ignore

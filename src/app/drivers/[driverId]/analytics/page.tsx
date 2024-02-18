@@ -3,13 +3,16 @@
 import DriverAnalytics from "@/components/screen/DriverAnalytics/DriverAnalytics";
 import {useRouter} from "next/navigation";
 import Cookies from "js-cookie";
+import {useEffect} from "react";
 
 const AnalyticsPage = () => {
-    const {push} = useRouter()
+    const router = useRouter()
     const token = Cookies.get('token')
-    if (!token) {
-        push('/login')
-    }
+    useEffect(() => {
+        if (!token) {
+            router.push('/login')
+        }
+    }, [token]);
     return (
         <div>
             <DriverAnalytics/>

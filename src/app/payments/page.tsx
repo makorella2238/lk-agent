@@ -1,18 +1,21 @@
 'use client'
 
 import Payments from "@/components/Payments/Payments";
-import React from "react";
+import React, {useEffect} from "react";
 import {useGetPaymentsAgent} from "@/hooks/payments/payments";
 import Preloader from "@/components/Preloader/Preloader";
 import {useRouter} from "next/navigation";
 import Cookies from "js-cookie";
 
 function LoginPage() {
-    const {push} = useRouter()
+    const router = useRouter()
     const token = Cookies.get('token')
-    if (!token) {
-        push('/login')
-    }
+    useEffect(() => {
+        if (!token) {
+            router.push('/login')
+        }
+    }, [token]);
+
     const {
         data: paymentsAgentData,
         isFetching: paymentsAgentIsFetching,

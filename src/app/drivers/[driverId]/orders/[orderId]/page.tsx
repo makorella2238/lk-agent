@@ -6,15 +6,22 @@ import {getIsAuth} from "@/Redux/app/app-selector";
 import {useParams, useRouter} from "next/navigation";
 import {useGerOrderDetail} from "@/hooks/drivers/drivers";
 import Preloader from "@/components/Preloader/Preloader";
-import React from "react";
+import React, {useEffect} from "react";
 import Cookies from "js-cookie";
 
 const OrderDetailPage = () => {
-    const {push} = useRouter()
+    const router = useRouter()
     const token = Cookies.get('token')
-    if (!token) {
-        push('/login')
-    }
+    useEffect(() => {
+        if (!token) {
+            router.push('/login')
+        }
+    }, [token]);
+    // const {push} = useRouter()
+    // const token = Cookies.get('token')
+    // if (!token) {
+    //     push('/login')
+    // }
     const params = useParams()
 
     // @ts-ignore
