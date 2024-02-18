@@ -76,7 +76,7 @@ const CreateNewCarModal = ({isCreateNewCarModal, setIsCreateNewCarModal}: Create
                                 />
                             )) }
                         </div>
-                            {errors.plateNumber && <span className='text-red-600'>{errors.plateNumber.message}</span>}
+                            {errors["plateNumber"] && <span className="text-red-600">{errors["plateNumber"].message}</span>}
                         <button
                             type="submit"
                             className={ `w-full mt-3 ${ s.BaseButton }` }
