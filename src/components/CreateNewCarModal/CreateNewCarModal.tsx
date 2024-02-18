@@ -1,7 +1,6 @@
 import Image from "next/image";
 import s from "@/components/ui/genetal-css/general.module.css";
 import {Modal} from "@material-ui/core";
-import {inputField} from "@/components/CreateNewDriver/CreateNewDriver";
 import React, {useState} from "react";
 import {SubmitHandler, useForm} from "react-hook-form";
 import { ICarInfo} from "@/interfaces/types";
