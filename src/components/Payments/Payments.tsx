@@ -1,4 +1,4 @@
-import React, {SetStateAction, useEffect, useState} from 'react';
+import React, {ChangeEvent, SetStateAction, useEffect, useState} from 'react';
 import {
     Button,
     Dialog,
@@ -39,7 +39,7 @@ const Payments = ({isFetching, data}: PaymentsProps) => {
     });
     const [statusFilter, setStatusFilter] = useState('');
     const [openModal, setOpenModal] = useState(false);
-    const [filteredPayments, setFilteredPayments] = useState<IPaymentsAgent['payments']>([]);
+    const [filteredPayments, setFilteredPayments] = useState(() => []);
 
     if (isFetching || !data) {
         return <Preloader/>;
@@ -54,15 +54,9 @@ const Payments = ({isFetching, data}: PaymentsProps) => {
         const {name, value} = event.target;
         setDateFilter((prevState) => ({...prevState, [name]: value}));
     };
-
-    const handleStatusFilterChange = (event: {
-        target: {
-            value: SetStateAction<string>
-        }
-    }) => {
-        setStatusFilter(event.target.value);
+    const handleStatusFilterChange = (event: ChangeEvent<{ value: unknown }>) => {
+        setStatusFilter(event.target.value as string);
     };
-
     const handleModalOpen = () => {
         setOpenModal(true);
     };
