@@ -69,7 +69,7 @@ const CreateNewCarModal = ({isCreateNewCarModal, setIsCreateNewCarModal}: Create
                             { inputFields.map((field: inputField) => (
                                 <input
                                     key={ field.name }
-                                    { ...register(field.name, {required: field.required, pattern: field.pattern}) }
+                                    { ...register(field.name as keyof ICarInfo, {required: field.required, pattern: field.pattern}) }
                                     type="text"
                                     placeholder={ field.placeholder }
                                     className="border border-gray-300 p-2 rounded-lg"
