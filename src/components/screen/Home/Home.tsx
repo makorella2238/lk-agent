@@ -10,7 +10,7 @@ const Home = () => {
     const pageSize = 10; // Количество элементов на странице Drivers
     const [offset, setOffset] = useState(0);
     const [isEditDriverModal, setIsEditDriverModal] = useState(false);
-    const [editedDriverId, setEditedDriverId] = useState<number | null>(null);
+    const [editedDriverId, setEditedDriverId] = useState<number>(null);
 
     const {
         data,

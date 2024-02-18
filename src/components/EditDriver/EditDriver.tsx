@@ -11,7 +11,7 @@ import {inputFields} from "@/components/CreateNewDriver/CreateNewDriver";
 interface CreateNewDriverProps {
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
     isModalOpen: boolean;
-    driverId: string | null
+    driverId: number | null
 }
 
 const EditDriver = ({
