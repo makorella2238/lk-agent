@@ -33,6 +33,7 @@ const DriverAnalytics = () => {
         setEnabled(true)
         setDateError('');
     };
+    // @ts-ignore
     const {error, data, isFetching} = useGetDriverAnalytic(params.driverId, dateFrom, dateTo, enabled);
 
     if (error) {
