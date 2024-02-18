@@ -36,11 +36,34 @@
 
 .BaseButton:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgb(71, 186, 164);
+  box-shadow: 0 0 0 3px rgb(54, 139, 116);
 }
 
 .fadeIn {
   animation: fadeIn ease-in-out .8s;
+}
+
+.filter_input {
+  flex: 1;
+  min-width: 200px;
+}
+
+.filter_container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.borderContainer {
+  @apply px-2 py-1 text-lg text-gray-700 mb-2 border-2
+}
+.miniBorderContainer {
+  @apply pl-2 py-1 text-lg text-gray-700 mb-1 border
+}
+
+.bodyText {
+  @apply font-bold text-emerald-600
 }
 
 @keyframes fadeIn {

@@ -1,24 +1,18 @@
-import s from './Preloader.module.scss'
+import s from './Preloader.module.css'
 
 const Preloader = () => {
     return (
-        <div className={ s.plContainer }>
-            <div className={ s.pl }>
-                <div className={ s.pl__dot }></div>
-                <div className={ s.pl__dot }></div>
-                <div className={ s.pl__dot }></div>
-                <div className={ s.pl__dot }></div>
-                <div className={ s.pl__dot }></div>
-                <div className={ s.pl__dot }></div>
-                <div className={ s.pl__dot }></div>
-                <div className={ s.pl__dot }></div>
-                <div className={ s.pl__dot }></div>
-                <div className={ s.pl__dot }></div>
-                <div className={ s.pl__dot }></div>
-                <div className={ s.pl__dot }></div>
-                <div className={ s.pl__text }>Loading…</div>
+        <div className='flex justify-center items-center' style={ {height: '75vh'} }>
+            <div className={ s.loader }>
+                <div className={ s.loader__bar }></div>
+                <div className={ s.loader__bar }></div>
+                <div className={ s.loader__bar }></div>
+                <div className={ s.loader__bar }></div>
+                <div className={ s.loader__bar }></div>
+                <div className={ s.loader__ball }></div>
             </div>
         </div>
+
     );
 };
 

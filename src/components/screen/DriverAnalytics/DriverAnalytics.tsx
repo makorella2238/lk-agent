@@ -3,38 +3,47 @@
 import React, {useState} from 'react';
 import s from '@/components/ui/genetal-css/general.module.css'
 import styles from './DriverAnalytics.module.css'
+import { useForm } from "react-hook-form";
+import {ICarInfo, IDriverAnalytic} from "@/interfaces/types";
+import {useGetDriverAnalytic} from "@/hooks/drivers/drivers";
+import {useParams} from "next/navigation";
+import Preloader from "@/components/Preloader/Preloader";
+
+type IData = {
+    dateFrom: string
+    dateTo: string
+}
 
 const DriverAnalytics = () => {
+    const [dateError, setDateError] = useState('');
     const [dateFrom, setDateFrom] = useState('');
-    const [dateTo, setDateTo] = useState('');
-    const [driverId, setDriverId] = useState('');
-    const [analyticsData, setAnalyticsData] = useState({});
-    const [loading, setLoading] = useState(false);
+    const [dateTo, setDateTO] = useState('');
+    const [enabled, setEnabled] = useState(false);
+    const params = useParams()
+    const {register, handleSubmit,  formState: {errors},
+    } = useForm<IData>();
+    const onSubmit = async (data: IData) => {
+        const { dateFrom, dateTo } = data;
 
-    const handleSubmit = (e: { preventDefault: () => void; }) => {
-        e.preventDefault();
-
-        setLoading(true);
-
-        // Вымышленные данные для массива incomeService
-        const analyticsData = {
-            orderCompeled: 10,
-            orderCanceled: 5,
-            incomeCourier: 1000,
-            incomeAgent: 500,
-            incomeService: 2000,
-
-        };
-
-        setAnalyticsData(analyticsData);
-
-        setLoading(false);
+        if (dateFrom > dateTo) {
+            return setDateError('Дата ОТ должна быть меньше или равна Дате ДО');
+        }
+        setDateTO(dateTo)
+        setDateFrom(dateFrom)
+        setEnabled(true)
+        setDateError('');
     };
+    const {error, data, isFetching} = useGetDriverAnalytic(params.driverId, dateFrom, dateTo, enabled);
+
+    if (error) {
+        console.log(error)
+        return <p>Ошибка при получении данных</p>
+    }
 
     return (
         <div className="mt-5 shadow-md container mx-auto p-4 text-center">
             <h1 className="text-2xl font-bold mb-4">Вкладка "Аналитика"</h1>
-            <form onSubmit={ handleSubmit } className="mb-4 ">
+            <form onSubmit={handleSubmit(onSubmit)} className="mb-4">
                 <div className="flex items-center mb-2 justify-center">
                     <label htmlFor="dateFrom" className="mr-2">
                         Дата ОТ:
@@ -42,11 +51,13 @@ const DriverAnalytics = () => {
                     <input
                         type="date"
                         id="dateFrom"
-                        value={ dateFrom }
-                        onChange={ (e) => setDateFrom(e.target.value) }
-                        className="w-1/4 p-2 border border-gray-300 rounded"
+                        {...register('dateFrom', { required: true })}
+                        className="sm:w-1/4 p-2 border border-gray-300 rounded"
                     />
                 </div>
+                {errors.dateFrom && (
+                    <p className="text-red-500">Обязательное поле. Введите корректную дату.</p>
+                )}
                 <div className="flex items-center mb-2 justify-center">
                     <label htmlFor="dateTo" className="mr-2">
                         Дата ДО:
@@ -54,45 +65,50 @@ const DriverAnalytics = () => {
                     <input
                         type="date"
                         id="dateTo"
-                        value={ dateTo }
-                        onChange={ (e) => setDateTo(e.target.value) }
-                        className="w-1/4 p-2 border border-gray-300 rounded"
+                        {...register('dateTo', { required: true })}
+                        className="sm:w-1/4 p-2 border border-gray-300 rounded"
                     />
                 </div>
+                {errors.dateTo && (
+                    <p className="text-red-500">Обязательное поле. Введите корректную дату.</p>
+                )}
+                {dateError && <div className="leading-8 text-red-500">{dateError}</div>}
                 <button
                     type="submit"
-                    className={ `${ s.BaseButton } w-1/4` }
-                    disabled={ loading }
+                    className={`${s.BaseButton} sm:w-1/4`}
+                    disabled={isFetching}
+                    onClick={handleSubmit(onSubmit)}
                 >
-                    { loading ? 'Загрузка...' : 'Получить информацию' }
+                    {isFetching ? 'Загрузка...' : 'Получить информацию'}
                 </button>
             </form>
-            { analyticsData && (
+            { data && (
                 <div>
                     <div className={ styles.borderContainer }>
                         Завершенных доставок:
-                        <span className={styles.bodyText}>{ analyticsData.orderCompeled }</span>
+                        <span className={styles.bodyText}>{' '}{ data.orderCompeled }</span>
                     </div>
                     <div className={ styles.borderContainer }>
                         Отмененных доставок:
-                        <span className={styles.bodyText}>{ analyticsData.orderCanceled }</span>
+                        <span className={styles.bodyText}>{' '}{ data.orderCanceled }</span>
                     </div>
                     <div className={ styles.borderContainer }>
                         Заработок Курьера:
-                        <span className={styles.bodyText}>{ analyticsData.incomeCourier }</span>
+                        <span className={styles.bodyText}>{' '}{ data.incomeCourier }</span>
                     </div>
                     <div className={ styles.borderContainer }>
                         Заработок Агента:
-                        <span className={styles.bodyText}>{ analyticsData.incomeAgent }</span>
+                        <span className={styles.bodyText}>{' '}{ data.incomeAgent }</span>
                     </div>
                     <div className={ styles.borderContainer }>
                         Работа сервиса:
-                        <span className={styles.bodyText}>{ analyticsData.incomeService }</span>
+                        <span className={styles.bodyText}>{' '}{ data.incomeService }</span>
                     </div>
                 </div>
             ) }
         </div>
     );
+
 };
 
 export default DriverAnalytics;

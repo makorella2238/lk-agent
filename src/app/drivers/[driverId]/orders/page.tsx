@@ -1,16 +1,38 @@
 'use client'
 
-import OrderTableMokData from "@/components/screen/OrderTable/OrderTableMokData";
-import Layout from "@/components/layout/Layout";
+import OrderTable from "@/components/screen/OrderTable/OrderTable";
+import {useSelector} from "react-redux";
+import {getIsAuth} from "@/Redux/app/app-selector";
+import {useParams, useRouter} from "next/navigation";
+import {useGetAllOrders} from "@/hooks/drivers/drivers";
+import Preloader from "@/components/Preloader/Preloader";
+import React, {useState} from "react";
+import Cookies from "js-cookie";
 
 const DetailPage = () => {
+    const {push} = useRouter()
+    const token = Cookies.get('token')
+    if (!token) {
+        push('/login')
+    }
+
+    const params = useParams()
+    const pageSize = 5; // Количество элементов на странице
+    const [offset, setOffset] = useState(0);
+    // @ts-ignore
+    const {data, isFetching, error} = useGetAllOrders(offset, pageSize, params.driverId)
+    if (!data || isFetching) {
+        return <Preloader/>
+    }
+
+    if (error) {
+        return <p className="text-red-600">Ошибка при получении данных</p>;
+    }
+
     return (
-        <Layout>
-            <h1 className="font-bold mt-3 mb-3 text-3xl text-center text-black">
-                Личный кабинет агента
-            </h1>
-            <OrderTableMokData/>
-        </Layout>
+        <div>
+            <OrderTable offset={offset} setOffset={setOffset} data={data} pageSize={pageSize}/>
+        </div>
     );
 }
 

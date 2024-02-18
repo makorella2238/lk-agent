@@ -1,31 +1,47 @@
 'use client'
 
-import React, { useState } from "react";
-import Payments from "@/components/Payments/Payments";
+import React, {useState} from "react";
 import Drivers from "@/components/Drivers/Drivers";
-import CreateNewDriver from "@/components/ui/CreateNewDriver/CreateNewDriver";
-import Layout from "@/components/layout/Layout";
+import {useGetAllDrivers} from "@/hooks/drivers/drivers";
+import Preloader from "@/components/Preloader/Preloader";
+import EditDriver from "@/components/EditDriver/EditDriver";
 
-const HomePage = () => {
+const Home = () => {
+    const pageSize = 10; // Количество элементов на странице Drivers
+    const [offset, setOffset] = useState(0);
+    const [isEditDriverModal, setIsEditDriverModal] = useState(false);
+    const [editedDriverId, setEditedDriverId] = useState<number | null>(null);
 
+    const {
+        data,
+        isFetching,
+        error,
+    } = useGetAllDrivers(offset, pageSize);
 
-    const [isModalOpen, setIsCreateNewDriverModal] = useState(false);
+    if (!data || isFetching) {
+        return <Preloader/>;
+    }
 
-    // @ts-ignore
+    if (error) {
+        return <p className="text-red-600">Ошибка при получении данных</p>;
+    }
+
     return (
-        <Layout>
-            <h1 className="font-semibold tracking-wide mt-3 mb-3 text-3xl sm:text-4xl text-center">
-                Личный кабинет агента
-            </h1>
-            <div className="mt-10 grid grid-cols-5 gap-5">
-                <Payments />
-                <div className="col-span-4">
-                    <Drivers setIsCreateNewDriverModal={setIsCreateNewDriverModal} />
-                </div>
+        <div>
+            <div className="mt-3 sm:mt-10 mx-2 sm:mx-5">
+                <Drivers
+                    data={ data }
+                    setOffset={ setOffset }
+                    offset={ offset }
+                    pageSize={ pageSize }
+                    setIsEditDriverModal={ setIsEditDriverModal }
+                    setEditedDriverId={ setEditedDriverId }
+                />
             </div>
-            {isModalOpen && <CreateNewDriver setIsCreateNewDriverModal={setIsCreateNewDriverModal} isModalOpen={isModalOpen}/>}
-        </Layout>
+            { isEditDriverModal && <EditDriver setIsModalOpen={ setIsEditDriverModal } isModalOpen={ isEditDriverModal }
+                                               driverId={ editedDriverId }/> }
+        </div>
     );
 };
 
-export default HomePage;
+export default Home;
