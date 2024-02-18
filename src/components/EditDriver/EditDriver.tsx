@@ -66,7 +66,7 @@ const EditDriver = ({
 
     const onSubmit: SubmitHandler<IAddEditDriver> = (requestData) => {
         if (driverId != null) {
-            handleEditDriver(requestData, driverId)
+            handleEditDriver(requestData, String(driverId))
         }
         setIsModalOpen(false)
         if (!errors) {

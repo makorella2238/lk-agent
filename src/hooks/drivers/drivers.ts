@@ -102,7 +102,6 @@ export const useEditDriver = (setRequestErrors: Dispatch<SetStateAction<string>>
         onSuccess: () => {
             setEditDriverLoading(false)
             queryClient.invalidateQueries({queryKey: ['getAllDrivers']})
-            console.log('Успех')
         },
         onError: (error: string) => {
             setRequestErrors(error)
