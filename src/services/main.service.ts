@@ -12,6 +12,7 @@ import {
     IPaymentsAgent
 } from "@/interfaces/types";
 import Cookies from 'js-cookie';
+import {IOrderDetails} from "@/components/screen/DetailOrder/DetailOrder";
 
 const instance = axios.create({
     // withCredentials: true,
@@ -64,7 +65,7 @@ export const mainService = {
     },
 
     async gerOrderDetails({driverId, orderId}: { driverId: string, orderId: string }) {
-        const {data} = await instance.get<IDriverInfo>(`api/?method=driver.orderinfo&token=a5842677d46463e1f5b9de0db8d0d6aba17b158d8a&driverId=${ driverId }&orderId=${ orderId }`,);
+        const {data} = await instance.get<IOrderDetails>(`api/?method=driver.orderinfo&token=a5842677d46463e1f5b9de0db8d0d6aba17b158d8a&driverId=${ driverId }&orderId=${ orderId }`,);
         return data;
     },
     async getDriverInfo({driverId}: { driverId: number }) {
