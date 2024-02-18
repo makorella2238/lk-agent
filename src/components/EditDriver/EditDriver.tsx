@@ -2,7 +2,7 @@ import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {SubmitHandler, useForm} from "react-hook-form";
 import s from "@/components/ui/genetal-css/general.module.css";
 import Image from "next/image";
-import {IAddEditDriver, inputField} from "@/interfaces/types";
+import {IAddEditDriver, ICarInfo, IDriverInfo, inputField} from "@/interfaces/types";
 import {useEditDriver, useGetDriversInfo} from "@/hooks/drivers/drivers";
 import Preloader from "@/components/Preloader/Preloader";
 import {Modal} from "@material-ui/core";
@@ -122,7 +122,7 @@ const EditDriver = ({
                             { inputFields.map((field: inputField) => (
                                 <input
                                     key={ field.name }
-                                    { ...register(field.name, {
+                                    { ...register(field.name as any, {
                                         required: field.required,
                                         pattern: field.pattern
                                     }) }

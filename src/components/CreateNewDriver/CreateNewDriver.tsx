@@ -116,7 +116,7 @@ const CreateNewDriver = ({
                             {inputFields.map((field: inputField) => (
                                 <input
                                     key={field.name}
-                                    {...register(field.name, {
+                                    {...register(field.name as any, {
                                         required: field.required,
                                         pattern: field.pattern
                                     })}
