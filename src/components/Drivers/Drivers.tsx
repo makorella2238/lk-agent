@@ -104,7 +104,7 @@ const DriversTable = ({
     const [isCreateNewDriverModal, setIsCreateNewDriverModal] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [filteredDrivers, setFilteredDrivers] = useState<IAllDrivers['drivers']>([]);
+    const [filteredDrivers, setFilteredDrivers] = useState(() => []);
 
     const handleFilterChange = (e: React.ChangeEvent<{ name?: string; value: unknown }>, column: string) => {
         setFilter({...filter, [column]: e.target.value});
