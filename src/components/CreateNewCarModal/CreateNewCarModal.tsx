@@ -3,7 +3,7 @@ import s from "@/components/ui/genetal-css/general.module.css";
 import {Modal} from "@material-ui/core";
 import React, {useState} from "react";
 import {SubmitHandler, useForm} from "react-hook-form";
-import { ICarInfo} from "@/interfaces/types";
+import {ICarInfo, inputField} from "@/interfaces/types";
 import {useParams} from "next/navigation";
 import {useCreateNewCar} from "@/hooks/drivers/drivers";
 
