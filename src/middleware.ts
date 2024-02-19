@@ -10,7 +10,7 @@ const proxy = httpProxy.createProxyServer({
 export async function middleware(request: NextRequest, response: NextResponse) {
     await new Promise<void>((resolve, reject) => {
         // @ts-ignore
-        proxy.web(request, response, (err) => {
+        proxy.web(request, response, (err: any) => {
             if (err) {
                 reject(err);
             } else {
