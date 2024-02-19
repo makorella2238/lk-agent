@@ -2,6 +2,7 @@
   "name": "lk-agenta",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://95.154.93.88:32768",
   "scripts": {
     "dev": "next dev --turbo",
     "build": "next build",
