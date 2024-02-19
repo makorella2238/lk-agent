@@ -16,7 +16,7 @@ import {IOrderDetails} from "@/components/screen/DetailOrder/DetailOrder";
 
 const instance = axios.create({
     // withCredentials: true,
-    baseURL: ' http://95.154.93.88:32768/'
+    baseURL: 'http://95.154.93.88:32768/'
 });
 
 axios.interceptors.response.use(
