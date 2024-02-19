@@ -15,7 +15,7 @@ import Cookies from 'js-cookie';
 import {IOrderDetails} from "@/components/screen/DetailOrder/DetailOrder";
 
 const instance = axios.create({
-    // withCredentials: true,
+    withCredentials: true,
     baseURL: 'http://95.154.93.88:32768/'
 });
 

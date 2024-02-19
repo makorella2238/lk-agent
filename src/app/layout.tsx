@@ -28,10 +28,10 @@ export default function RootLayout({
         <StoreProvider>
             <ReactQueryProvider>
                 <html lang="en">
-                <head>
-                    <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
-                    <title>Личный кабинет Агента</title>
-                </head>
+                {/*<head>*/}
+                {/*    <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests"/>*/}
+                {/*    <title>Личный кабинет Агента</title>*/}
+                {/*</head>*/}
                 <body className={ manrope.className }>
                     <Header/>
                     <main className='mt-4 sm:mt-10'>
