@@ -1,17 +1,23 @@
-import { createProxyMiddleware } from 'http-proxy-middleware';
+import httpProxy from 'http-proxy';
 import { NextRequest, NextResponse } from 'next/server';
 
-const options = {
+const proxy = httpProxy.createProxyServer({
     target: 'http://95.154.93.88:32768',
     changeOrigin: true,
     secure: false,
-};
-
-const proxy = createProxyMiddleware(options);
+});
 
 export async function middleware(request: NextRequest, response: NextResponse) {
-    // @ts-ignore
-    await proxy(request, response);
+    await new Promise<void>((resolve, reject) => {
+        // @ts-ignore
+        proxy.web(request, response, (err) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve();
+            }
+        });
+    });
 }
 
 export const config = {
