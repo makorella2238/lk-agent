@@ -1,16 +1,19 @@
+import {ValidationValueMessage} from "react-hook-form";
+
 export type ILogin = {
     login: string
     password: string
 }
 
 export type ILoginResponse = {
-    answer: number
+    answer: string
     token: string
     agentId: number
+    admin: 1 | -1
 }
 
 export type IPaymentsAgent = {
-    answer: number
+    answer: string
     balance: number
     dateNextPayment: string
     payments_total: number
@@ -26,7 +29,7 @@ export type IPayments = {
 }
 
 export type IAllDrivers = {
-    answer: number
+    answer: string
     total: number
     drivers: [IDriver]
 }
@@ -61,7 +64,7 @@ export type IDriverInfo = {
     patronymic?: string;
     dateBirth : string;
     telephone: string;
-    status: 3 | 2 | 1
+    status: 2 | 1 | -1
     driverLicenceSeries: string;
     driverLicenceNumber: string;
     driverLicenceCountry: string;
@@ -81,7 +84,7 @@ export type IDriverInfo = {
 }
 
 export type ICarInfo = {
-    answer: number
+    answer: string
     cars: [ICar]
 }
 
@@ -112,13 +115,11 @@ export type IDriver = {
 }
 
 export type inputField = {
+    pattern?: ValidationValueMessage<RegExp> | RegExp | undefined;
     name: string;
     placeholder: string;
     required?: boolean;
-    pattern?: {
-        value: RegExp
-        message: string
-    }
+    type?: string
 };
 
 export type IDriverAnalytic = {
@@ -130,7 +131,7 @@ export type IDriverAnalytic = {
 }
 
 export type IDriverTransactions = {
-    answer: number
+    answer: string
     total: number
     transactions: [ITransactions]
 }
@@ -144,7 +145,7 @@ export type ITransactions = {
 }
 
 export type IAllDriverOrders = {
-    answer: number
+    answer: string
     total: number
     orders: IDriverOrders[]
 }

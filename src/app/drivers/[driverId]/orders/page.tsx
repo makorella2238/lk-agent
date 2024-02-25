@@ -8,6 +8,7 @@ import {useGetAllOrders} from "@/hooks/drivers/drivers";
 import Preloader from "@/components/Preloader/Preloader";
 import React, {useEffect, useState} from "react";
 import Cookies from "js-cookie";
+import Layout from "@/components/Layout/Layout";
 
 const DetailPage = () => {
     const router = useRouter()
@@ -32,9 +33,9 @@ const DetailPage = () => {
     }
 
     return (
-        <div>
+        <Layout>
             <OrderTable offset={offset} setOffset={setOffset} data={data} pageSize={pageSize}/>
-        </div>
+        </Layout>
     );
 }
 

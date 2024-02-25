@@ -4,6 +4,7 @@ import Home from "@/components/screen/Home/Home";
 import Cookies from "js-cookie";
 import {useRouter} from "next/navigation";
 import {useEffect} from "react";
+import Layout from "@/components/Layout/Layout";
 
 const HomePage = () => {
     const router = useRouter()
@@ -16,9 +17,9 @@ const HomePage = () => {
 
 
     return  (
-        <div>
+        <Layout>
             <Home/>
-        </div>
+        </Layout>
     )
 }
 

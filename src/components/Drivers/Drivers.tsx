@@ -25,8 +25,9 @@ import {
     TextField
 } from '@material-ui/core';
 import {renderPagination} from "@/utils/tablePagitaion";
+import {formatDate, formatPrice} from "@/utils/formateData";
 
-const formatStatus = (status: number) => {
+export const formatStatus = (status: number) => {
     switch (status) {
         case 2:
             return 'Работает';
@@ -44,7 +45,7 @@ export const formatWorkUsl = (workUsl: string) => {
         case 'fiz':
             return 'Физлицо';
         case 'self':
-            return 'самозанятый';
+            return 'Самозанятый';
         case 'ip':
             return 'ИП';
         case 'ООО':
@@ -93,14 +94,16 @@ const DriversTable = ({
         telephone: '',
         workUsl: '',
         status: '',
-        lastOrderDate: '',
+        startLastOrderDate: '',
+        endLastOrderDate: '',
     });
     const isFilterActive =
         filter.fullName ||
         filter.telephone ||
         filter.workUsl ||
         filter.status ||
-        filter.lastOrderDate;
+        filter.startLastOrderDate ||
+        filter.endLastOrderDate
     const [isCreateNewDriverModal, setIsCreateNewDriverModal] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
@@ -115,23 +118,27 @@ const DriversTable = ({
     }, []);
 
     const handleFilter = () => {
-        if (!filter.status && !filter.workUsl && !filter.telephone && !filter.fullName && !filter.lastOrderDate) {
+        if (!filter.status && !filter.workUsl && !filter.telephone && !filter.fullName && !filter.startLastOrderDate && !filter.endLastOrderDate) {
+            setFilteredDrivers(data.drivers);
             setFilteredDrivers(data.drivers);
         }
 
         setOpenModal(false);
         setOpenModal(false)
         const filteredData = data.drivers.filter((item: IDriver) => {
-            const fullName = `${ item.surname } ${ item.name } ${ item.patronymic }`
+            const fullName = `${item.surname} ${item.name} ${item.patronymic}`;
+            const lastOrderDate = item.lastOrderDate.split("T")[0];
 
             return (
                 fullName.toLowerCase().includes(filter.fullName.toLowerCase()) &&
                 item.workUsl.toLowerCase().includes(filter.workUsl.toLowerCase()) &&
-                item.lastOrderDate.toLowerCase().includes(filter.lastOrderDate.toLowerCase()) &&
                 item.telephone.toString().includes(filter.telephone) &&
-                item.status.toString().toLowerCase().includes(filter.status.toLowerCase())
-            )
+                item.status.toString().toLowerCase().includes(filter.status.toLowerCase()) &&
+                (!filter.startLastOrderDate || lastOrderDate >= filter.startLastOrderDate) &&
+                (!filter.endLastOrderDate || lastOrderDate <= filter.endLastOrderDate)
+            );
         }).slice(offset, offset + pageSize);
+
         setFilteredDrivers(filteredData);
     }
 
@@ -146,7 +153,6 @@ const DriversTable = ({
     };
 
     const total = data.total
-
     const handleEditDriver = (item: IDriver) => {
         if (item.status === -1) {
         } else {
@@ -161,10 +167,10 @@ const DriversTable = ({
             telephone: '',
             workUsl: '',
             status: '',
-            lastOrderDate: '',
+            startLastOrderDate: '',
+            endLastOrderDate: '',
         })
     };
-
     const handleDriverDelete = useDeleteDriver()
 
     return (
@@ -209,34 +215,43 @@ const DriversTable = ({
                         <TableBody>
                             { filteredDrivers && filteredDrivers.length > 0 ?
                                 filteredDrivers.map((item: IDriver) => (
-                                    <TableRow key={ item.driverId }
-                                              onDoubleClick={ () => router.push(`/drivers/${ item.driverId }`) }>
-                                        <TableCell onClick={ () => router.push(`/drivers/${ item.driverId }`) }>
-                                            <p className='text-blue-600 cursor-pointer sm:text-black sm:border-none sm:cu'>{ `${ item.surname } ${ item.name } ${ item.patronymic }` }</p>
-                                        </TableCell>
-                                        <TableCell>{ item.telephone }</TableCell>
-                                        <TableCell>{ formatWorkUsl(item.workUsl) }</TableCell>
-                                        <TableCell>{ formatStatus(item.status) }</TableCell>
-                                        <TableCell>{ formatState(item.state) }</TableCell>
-                                        <TableCell>{ item.balance }</TableCell>
-                                        <TableCell>{ item.lastOrderDate.split('T')[0] }</TableCell>
+                                    <TableRow
+                                        key={item.driverId}
+                                        onClick={() => router.push(`/drivers/${item.driverId}`)}
+                                        className='hover:bg-gray-100'
+                                    >
                                         <TableCell>
-                                            <div className={ styles.buttonContainer }>
+                                                {`${item.surname} ${item.name} ${item.patronymic}`}
+                                        </TableCell>
+                                        <TableCell>{item.telephone}</TableCell>
+                                        <TableCell>{formatWorkUsl(item.workUsl)}</TableCell>
+                                        <TableCell>{formatStatus(item.status)}</TableCell>
+                                        <TableCell>{formatState(item.state)}</TableCell>
+                                        <TableCell>{formatPrice(item.balance)}</TableCell>
+                                        <TableCell>{item.lastOrderDate.split('T')[0] === '0001-01-01' ? '' : formatDate(item.lastOrderDate)}</TableCell>
+                                        <TableCell>
+                                            <div className={styles.buttonContainer}>
                                                 <Button
                                                     variant="outlined"
                                                     color="primary"
-                                                    className={ styles.editButton }
-                                                    onClick={ () => handleEditDriver(item) }
+                                                    className={styles.editButton}
+                                                    onClick={(event) => {
+                                                        event.stopPropagation();
+                                                        handleEditDriver(item);
+                                                    }}
                                                 >
-                                                    <Image src="/edit.svg" alt="edit" width={ 20 } height={ 20 }/>
+                                                    <Image src="/edit.svg" alt="edit" width={20} height={20} />
                                                 </Button>
                                                 <Button
                                                     variant="outlined"
                                                     color="secondary"
-                                                    className={ styles.deleteButton }
-                                                    onClick={ () => handleDriverDelete(item.driverId) }
+                                                    className={styles.deleteButton}
+                                                    onClick={(event) => {
+                                                        event.stopPropagation();
+                                                        handleDriverDelete(item.driverId);
+                                                    }}
                                                 >
-                                                    <Image src="/remove.svg" alt="delete" width={ 20 } height={ 20 }/>
+                                                    <Image src="/remove.svg" alt="delete" width={20} height={20} />
                                                 </Button>
                                             </div>
                                         </TableCell>
@@ -252,7 +267,7 @@ const DriversTable = ({
                     </Table>
                 </Paper>
             </TableContainer>
-            <Dialog open={ openModal } onClose={ () => setOpenModal(false) } aria-labelledby="form-dialog-title">
+            <Dialog open={ openModal } onClose={ () => setOpenModal(false) } aria-labelledby="form-dialog-title" onKeyDown={(e) => e.key === 'Enter' && handleFilter() }>
                 <DialogTitle id="form-dialog-title">Фильтр</DialogTitle>
                 <DialogContent>
                     <div className='mx-5 gap-3 sm:gap-5'>
@@ -305,11 +320,22 @@ const DriversTable = ({
                         </TextField>
                         <div className='mt-3 sm:mt-5'></div>
                         <TextField
-                            label="Дата последнего заказа"
+                            label="Начальная дата последнего заказа"
                             type="date"
                             className='w-full'
-                            value={ filter.lastOrderDate }
-                            onChange={ (e) => handleFilterChange(e, 'lastOrderDate') }
+                            value={ filter.startLastOrderDate }
+                            onChange={ (e) => handleFilterChange(e, 'startLastOrderDate') }
+                            InputLabelProps={ {
+                                shrink: true,
+                            } }
+                        />
+                        <div className='mt-3 sm:mt-5'></div>
+                        <TextField
+                            label="Конечная дата последнего заказа"
+                            type="date"
+                            className='w-full'
+                            value={ filter.endLastOrderDate }
+                            onChange={ (e) => handleFilterChange(e, 'endLastOrderDate') }
                             InputLabelProps={ {
                                 shrink: true,
                             } }

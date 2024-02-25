@@ -20,6 +20,9 @@ import {IAllDriverOrders} from "@/interfaces/types";
 import TableContainer from "@material-ui/core/TableContainer";
 import styles from "@/components/ui/genetal-css/general.module.css";
 import {renderPagination} from "@/utils/tablePagitaion";
+import {formatDateAndClock} from "@/utils/formateData";
+import s from "@/components/ui/genetal-css/general.module.css";
+import Image from "next/image";
 
 type OrderTableMokDataProps = {
     offset: number
@@ -27,6 +30,20 @@ type OrderTableMokDataProps = {
     data: IAllDriverOrders
     pageSize: number
 }
+
+export const formatCategory = (category: string) => {
+    switch (category) {
+        case 'food':
+            return 'Еда';
+        case 'product':
+            return 'Товары';
+        case 'package':
+            return 'Посылка';
+        default:
+            return 'Неизвестно';
+    }
+};
+
 
 export const getStatusLabel = (status: number) => {
     switch (status) {
@@ -144,6 +161,7 @@ const OrderTable = ({data, pageSize, setOffset, offset}: OrderTableMokDataProps)
     const handleFilter = () => {
         setIsFilterApplied(true);
         setCurrentPage(1);
+        setOpenModal(false)
     };
     const handleResetFilter = () => {
         setCarFilter('');
@@ -155,8 +173,14 @@ const OrderTable = ({data, pageSize, setOffset, offset}: OrderTableMokDataProps)
         });
         setIsFilterApplied(false);
     };
+
     return (
-        <div className='mx-5'>
+        <div className='mx-5 relative'>
+            <div className={ `absolute top-1 left-1 ${ s.BaseButton } p-2 flex  transition-colors ` }
+                 onClick={ () => router.back() }>
+                <Image className='sm:mr-3' src='/arrow_back.svg' alt='arrow_back' width={ 20 } height={ 20 }/>
+                <p className='hidden sm:block'>Назад</p>
+            </div>
             <h1 className="text-center font-bold my-3 ml-3 text-2xl ">
                 Заказы
             </h1>
@@ -182,13 +206,14 @@ const OrderTable = ({data, pageSize, setOffset, offset}: OrderTableMokDataProps)
                             { getCurrentPageOrders().length > 0 ? (
                                 getCurrentPageOrders().map((order: any) => (
                                     <TableRow key={ order.id }
-                                              onDoubleClick={ () => router.push(`orders/${ order.id }`) }>
+                                              onClick={ () => router.push(`orders/${ order.id }`) }
+                                              className='hover:bg-gray-100'>
                                         <TableCell>{ order.uid }</TableCell>
                                         <TableCell>{ order.carName }</TableCell>
-                                        <TableCell>{ order.type }</TableCell>
-                                        <TableCell>{ order.dateTimeCourierAccept && order.dateTimeCourierAccept.split('T').join(' ') }</TableCell>
-                                        <TableCell>{ order.dateTimeCourierPickUp && order.dateTimeCourierPickUp.split('T').join(' ') }</TableCell>
-                                        <TableCell>{ order.dateTimeCourierDone && order.dateTimeCourierDone.split('T').join(' ') }</TableCell>
+                                        <TableCell>{ order.type && formatCategory(order.type) }</TableCell>
+                                        <TableCell>{ order.dateTimeCourierAccept && formatDateAndClock(order.dateTimeCourierAccept) }</TableCell>
+                                        <TableCell>{ order.dateTimeCourierPickUp && formatDateAndClock(order.dateTimeCourierPickUp) }</TableCell>
+                                        <TableCell>{ order.dateTimeCourierDone && formatDateAndClock(order.dateTimeCourierDone)}</TableCell>
                                         <TableCell>{ getStatusLabel(order.status) }</TableCell>
                                     </TableRow>
                                 ))
@@ -204,7 +229,7 @@ const OrderTable = ({data, pageSize, setOffset, offset}: OrderTableMokDataProps)
                 </Paper>
             </TableContainer>
             { renderPagination(currentPage, total, pageSize, handleChangePage) }
-            <Dialog open={ openModal } onClose={ () => setOpenModal(false) } aria-labelledby="form-dialog-title">
+            <Dialog open={ openModal } onClose={ () => setOpenModal(false) } aria-labelledby="form-dialog-title" onKeyDown={(e) => e.key === 'Enter' && handleFilter() } fullWidth={true}>
                 <DialogTitle id="form-dialog-title">Фильтр</DialogTitle>
                 <DialogContent>
                     <div className='mx-5 gap-5'>
@@ -234,13 +259,16 @@ const OrderTable = ({data, pageSize, setOffset, offset}: OrderTableMokDataProps)
                             <MenuItem value="4">Курьер в точке Б</MenuItem>
                             <MenuItem value="5">Отработан</MenuItem>
                         </TextField>
-
+                        <div className='mt-5'></div>
                         <TextField
                             select
                             label="Категория"
                             value={ categoryFilter }
                             onChange={ handleCategoryFilterChange }
                             className='w-full'
+                            InputLabelProps={ {
+                                shrink: true,
+                            } }
                         >
                             <MenuItem value="">Все</MenuItem>
                             <MenuItem value="food">Еда</MenuItem>
@@ -274,7 +302,7 @@ const OrderTable = ({data, pageSize, setOffset, offset}: OrderTableMokDataProps)
                     </div>
                 </DialogContent>
                 <DialogActions>
-                    <div className='flex flex-col sm:flex-row sm:gap-5 flex-wrap'>
+                    <div className='flex flex-col sm:flex-row gap-2 sm:gap-5 flex-wrap'>
                         <button
                             className={ `${ styles.BaseButton } ${
                                 !isFilterApplied ? 'hidden' : ''

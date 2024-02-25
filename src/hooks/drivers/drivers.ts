@@ -17,14 +17,16 @@ export const useGetAllDrivers = (offset: number, count: number) => {
     const queryClient = useQueryClient();
 
     const idAgent = Cookies.get('agentId')
+    const newToken = Cookies.get('token')
     if (!idAgent) {
+        debugger
         queryClient.invalidateQueries({queryKey: ['getAllDrivers']})
     }
     return useQuery<IAllDrivers>({
             queryKey: ['getAllDrivers'],
             queryFn: async () => {
                 // @ts-ignore
-                return await mainService.getAllDrivers({offset, count, idAgent});
+                return await mainService.getAllDrivers({offset, count, idAgent, newToken});
             }
         }
     )

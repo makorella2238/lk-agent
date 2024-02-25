@@ -20,7 +20,6 @@
   color: white;
   cursor: pointer;
   box-shadow: 0 8px 20px rgba(66, 118, 196, 0.3);
-  margin-top: 10px;
   transition: all 0.3s ease-in-out;
 }
 

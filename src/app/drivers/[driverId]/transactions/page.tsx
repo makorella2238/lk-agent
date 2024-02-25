@@ -8,6 +8,7 @@ import {useParams, useRouter} from "next/navigation";
 import {useGetDriverTransactions} from "@/hooks/drivers/drivers";
 import Preloader from "@/components/Preloader/Preloader";
 import Cookies from "js-cookie";
+import Layout from "@/components/Layout/Layout";
 
 const TransactionsPage = () => {
     const router = useRouter()
@@ -33,9 +34,9 @@ const TransactionsPage = () => {
     }
 
     return (
-        <div>
+        <Layout>
             <Transactions data={data}/>
-        </div>
+        </Layout>
     );
 }
 

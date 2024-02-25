@@ -15,7 +15,7 @@ const LoginForm = () => {
         handleSubmit,
         formState: {errors},
     } = useForm<ILogin>()
-    const [requestErrors, setRequestErrors] = useState<number | null>(null)
+    const [requestErrors, setRequestErrors] = useState<string | null>(null)
 
     const handleLogin = LoginMutation(setRequestErrors)
 
@@ -25,7 +25,7 @@ const LoginForm = () => {
     }
 
     return (
-        <div className="flex justify-center items-center h-[80vh]">
+        <div className="flex justify-center items-center h-screen">
             <div className="bg-white p-10 rounded shadow-md w-96">
                 <h2 className="text-2xl font-bold mb-5">Авторизация</h2>
                 <form className="space-y-4" onSubmit={ handleSubmit(onSubmit) }>
@@ -46,7 +46,7 @@ const LoginForm = () => {
                                { ...register("password", {required: true}) }/>
                         {errors.password && <span className='text-red-600'>Это поле обязательное для заполнения</span>}
                     </div>
-                    <span className='text-red-600 text-lg'>{requestErrors && requestErrors === 1 && 'не все аргументы заполнены' || requestErrors === 2 && 'пара логин-пароль неверная'}</span>
+                    <span className='text-red-600 text-lg'>{requestErrors && requestErrors === '1' && 'не все аргументы заполнены' || requestErrors === '2' && 'пара логин-пароль неверная'}</span>
                     <button type="submit"
                             className={`w-full ${s.BaseButton}`}>Войти
                     </button>

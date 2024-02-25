@@ -4,7 +4,6 @@ import "./globals.css";
 import React from "react";
 import {StoreProvider} from "@/Redux/StoreProvider";
 import ReactQueryProvider from "@/ReactQueryProvider";
-import Header from "@/components/Header/Header";
 
 const manrope = Manrope({
     weight: ['400', "600", "300", "500",],
@@ -27,12 +26,9 @@ export default function RootLayout({
     return (
         <StoreProvider>
             <ReactQueryProvider>
-                <html lang="en">
+                <html lang="ru">
                 <body className={ manrope.className }>
-                    <Header/>
-                    <main className='mt-4 sm:mt-10'>
-                        { children }
-                    </main>
+                { children }
                 </body>
                 </html>
             </ReactQueryProvider>

@@ -1,12 +1,11 @@
 'use client'
 
 import s from './Detail.module.css'
-import {useSelector} from "react-redux";
-import {getFIO} from "@/Redux/app/app-selector";
 import React from "react";
-import {getStatusLabel} from "@/components/screen/OrderTable/OrderTable";
+import {formatCategory, getStatusLabel} from "@/components/screen/OrderTable/OrderTable";
 import Image from "next/image";
 import Cookies from "js-cookie";
+import {formatDateAndClock, formatPrice} from "@/utils/formateData";
 
 export type IOrderDetails = {
     id: number;
@@ -25,7 +24,7 @@ export type IOrderDetails = {
     pointToName: string;
     pointToLat: number;
     pointToLon: number;
-    paymentMethod: 'sbp' | 'done' | 'aquiring'
+    paymentMethod: 'sbp' | 'done' | 'acquiring'
     summaDelivery: number;
     summaService: number;
     summaAgent: number;
@@ -68,30 +67,30 @@ const DetailOrder = ({data}: DetailOrderProps) => {
 
                 <div className={ s.borderContainer }>
                     Категория:{ ' ' }
-                    <span className={ s.bodyText }>{ data.type }</span>
+                    <span className={ s.bodyText }>{  data.type && formatCategory(data.type) }</span>
                 </div>
 
                 <div className={ s.borderContainer }>
                     Дата и время принятия заказа:{ ' ' }
                     <span
-                        className={ s.bodyText }>{ data.dateTimeCourierAccept && data.dateTimeCourierAccept.split('T').join(' ') }</span>
+                        className={ s.bodyText }>{ data.dateTimeCourierAccept && formatDateAndClock(data.dateTimeCourierAccept) }</span>
                 </div>
 
                 <div className={ s.borderContainer }>
                     Дата и время подачи:{ ' ' }
                     <span
-                        className={ s.bodyText }>{ data.dateTimeCourierPickUp && data.dateTimeCourierPickUp.split('T').join(' ') }</span>
+                        className={ s.bodyText }>{ data.dateTimeCourierPickUp && formatDateAndClock(data.dateTimeCourierPickUp) }</span>
                 </div>
 
                 <div className={ s.borderContainer }>
                     Дата и время завершения:{ ' ' }
                     <span
-                        className={ s.bodyText }>{ data.dateTimeCourierDone && data.dateTimeCourierDone.split('T').join(' ') }</span>
+                        className={ s.bodyText }>{ data.dateTimeCourierDone && formatDateAndClock(data.dateTimeCourierDone) }</span>
                 </div>
 
                 <div className={ s.borderContainer }>
                     Статус:{ ' ' }
-                    <span className={ s.bodyText }>{ getStatusLabel(data.status) }</span>
+                    <span className={ s.bodyText }>{ data.status && getStatusLabel(data.status) }</span>
                 </div>
 
                 <div className={ `flex items-center mb-2 ${ s.borderContainer }` }>
@@ -116,27 +115,27 @@ const DetailOrder = ({data}: DetailOrderProps) => {
                 </div>
                 <div className={ s.borderContainer }>
                     Путь:{ ' ' }
-                    <span className={ s.bodyText }>{ data.distance }</span>
+                    <span className={ s.bodyText }>{ data.distance } м</span>
                 </div>
                 <div className={ s.borderContainer }>
                     Тип оплаты: { ' ' } <span
-                    className={ s.bodyText }>{ data.paymentMethod == 'sbp' && 'Безналично' || data.paymentMethod == 'aquiring' && 'Безналично' || data.paymentMethod == 'done' && 'Уже оплачено' }</span>
+                    className={ s.bodyText }>{ data.paymentMethod === 'sbp' || data.paymentMethod === 'acquiring'  && 'Безналично' || data.paymentMethod == 'done' && 'Уже оплачено' }</span>
                 </div>
                 <div className={ s.borderContainer }>
                     Общая стоимость:{ ' ' }
-                    <span className={ s.bodyText }>{ data.summaDelivery }</span>
+                    <span className={ s.bodyText }>{ data.summaDelivery && formatPrice(data.summaDelivery)}</span>
                 </div>
                 <div className={ s.borderContainer }>
                     Работа сервиса:{ ' ' }
-                    <span className={ s.bodyText }>{ data.summaService }</span>
+                    <span className={ s.bodyText }>{ data.summaService && formatPrice(data.summaService) }</span>
                 </div>
                 <div className={ s.borderContainer }>
                     Заработок Агента:{ ' ' }
-                    <span className={ s.bodyText }>{ data.summaAgent }</span>
+                    <span className={ s.bodyText }>{ data.summaAgent && formatPrice(data.summaAgent) }</span>
                 </div>
                 <div className={ s.borderContainer }>
                     Заработок Курьера:{ ' ' }
-                    <span className={ s.bodyText }>{ data.summaCourierFinal }</span>
+                    <span className={ s.bodyText }>{ data.summaCourierFinal && formatPrice(data.summaCourierFinal) }</span>
                 </div>
             </div>
         </div>

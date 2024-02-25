@@ -8,6 +8,7 @@ import {useGerOrderDetail} from "@/hooks/drivers/drivers";
 import Preloader from "@/components/Preloader/Preloader";
 import React, {useEffect} from "react";
 import Cookies from "js-cookie";
+import Layout from "@/components/Layout/Layout";
 
 const OrderDetailPage = () => {
     const router = useRouter()
@@ -37,9 +38,9 @@ const OrderDetailPage = () => {
 
 
     return (
-        <div>
+        <Layout>
             <DetailOrder data={data}/>
-        </div>
+        </Layout>
     );
 }
 

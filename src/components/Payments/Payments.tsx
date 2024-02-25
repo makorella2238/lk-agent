@@ -1,11 +1,9 @@
-import React, {ChangeEvent, SetStateAction, useEffect, useState} from 'react';
+import React, {ChangeEvent, useEffect, useState} from 'react';
 import {
-    Button,
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
-    FormControl,
     InputLabel,
     MenuItem,
     Paper,
@@ -23,6 +21,7 @@ import Preloader from "@/components/Preloader/Preloader";
 import s from './Payments.module.css'
 import styles from '@/components/ui/genetal-css/general.module.css'
 import {IPaymentsAgent} from "@/interfaces/types";
+import {formatDate, formatPrice} from "@/utils/formateData";
 
 type PaymentsProps = {
     isFetching: boolean;
@@ -40,6 +39,7 @@ const Payments = ({isFetching, data}: PaymentsProps) => {
     const [statusFilter, setStatusFilter] = useState('');
     const [openModal, setOpenModal] = useState(false);
     const [filteredPayments, setFilteredPayments] = useState(() => []);
+    const isFilterActive = statusFilter || dateFilter.endDate || dateFilter.endDate
 
     if (isFetching || !data) {
         return <Preloader/>;
@@ -94,6 +94,14 @@ const Payments = ({isFetching, data}: PaymentsProps) => {
         setFilteredPayments(filteredData);
     };
 
+    const handleResetFilter = () => {
+        setDateFilter({
+            startDate: '',
+            endDate: '',
+        })
+        setStatusFilter('')
+    };
+
     return (
         <div className="pb-6 p-4 text-black shadow-lg">
             <div className="text-center">
@@ -102,94 +110,101 @@ const Payments = ({isFetching, data}: PaymentsProps) => {
                     <Image className="mb-2" src="/money.png" alt="cash" width={ 32 } height={ 32 }/>
                     <p className="mb-1.5 ml-1.5 text-lg sm:text-xl">
                         <span className="font-bold">Баланс: </span> <span
-                        className="font-light">{ data.balance }р</span>
+                        className="font-light">{ formatPrice(data.balance) }</span>
                     </p>
                 </div>
                 <div className="mb-2 sm:mb-5 ml-1.5 text-base sm:text-lg">
                     <span className="font-bold text-center">Следующая выплата:</span>{ " " }
                     <span
-                        className="font-bold text-emerald-500 text-center">{ data.dateNextPayment.split('T')[0] }</span>
+                        className="font-bold text-emerald-500 text-center">{ formatDate(data.dateNextPayment) }</span>
                 </div>
             </div>
 
             <div className="relative my-2 sm:mb-3">
-                <button className={`float-right mb-2 sm:mb-4 ${styles.BaseButton}`} onClick={ handleModalOpen }>
+                <button className={ `float-right mb-2 sm:mb-4 ${ styles.BaseButton }` } onClick={ handleModalOpen }>
                     Фильтровать
                 </button>
 
-            <TableContainer component={ Paper }>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Номер платежа</TableCell>
-                            <TableCell>Дата следующего платежа</TableCell>
-                            <TableCell>Расчетный счет</TableCell>
-                            <TableCell>Описание</TableCell>
-                            <TableCell>Сумма</TableCell>
-                            <TableCell>Статус</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {filteredPayments.map((payment) => (
-                            <TableRow key={payment.paymentId}>
-                                <TableCell>{payment.paymentId}</TableCell>
-                                <TableCell>
-                                    {payment.dateRequestPayment.split('T')[0]}
-                                </TableCell>
-                                <TableCell>{payment.checkingAccount}</TableCell>
-                                <TableCell>{payment.description}</TableCell>
-                                <TableCell>{payment.summa}</TableCell>
-                                <TableCell>
-                                    {payment.status === 2 && 'Выполнено'}
-                                    {payment.status === 1 && 'Отправлено в банк'}
-                                    {payment.status === -1 && 'Ошибка'}
-                                </TableCell>
+                <TableContainer component={ Paper }>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Номер платежа</TableCell>
+                                <TableCell>Дата следующего платежа</TableCell>
+                                <TableCell>Расчетный счет</TableCell>
+                                <TableCell>Описание</TableCell>
+                                <TableCell>Сумма</TableCell>
+                                <TableCell>Статус</TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                        </TableHead>
+                        <TableBody>
+                            { filteredPayments.length > 0 ?
+                                filteredPayments.map((payment) => (
+                                    <TableRow key={ payment.paymentId } className='hover:bg-gray-100'>
+                                        <TableCell>{ payment.paymentId }</TableCell>
+                                        <TableCell>
+                                            { payment.dateRequestPayment.split('T')[0].split('-').reverse().join('.') }
+                                        </TableCell>
+                                        <TableCell>{ payment.checkingAccount }</TableCell>
+                                        <TableCell>{ payment.description }</TableCell>
+                                        <TableCell>{ `${ payment.summa } ₽` }</TableCell>
+                                        <TableCell>
+                                            { payment.status === 2 && 'Выполнено' }
+                                            { payment.status === 1 && 'Отправлено в банк' }
+                                            { payment.status === -1 && 'Ошибка' }
+                                        </TableCell>
+                                    </TableRow>
+                                )) : (
+                                    <TableRow>
+                                        <TableCell colSpan={ 7 } align="center">
+                                            Нет данных
+                                        </TableCell>
+                                    </TableRow>
+                                ) }
+                        </TableBody>
+                    </Table>
+                </TableContainer>
 
-            <Dialog open={ openModal } onClose={ handleModalClose } aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Фильтр</DialogTitle>
-                <DialogContent>
-                    <div className={ s.filter_container }>
-                        <div className={ s.filter_input }>
-                            <TextField
-                                type="date"
-                                label="Начальная дата"
-                                name="startDate"
-                                className='w-full'
-                                value={ dateFilter.startDate }
-                                onChange={ handleDateFilterChange }
-                                InputLabelProps={ {
-                                    shrink: true,
-                                } }
-                            />
-                        </div>
-                        <div className='mb-3 sm:mb-5'></div>
-                        <div className={ s.filter_input }>
-                            <TextField
-                                type="date"
-                                label="Конечная дата"
-                                name="endDate"
-                                className='w-full'
-                                value={ dateFilter.endDate }
-                                onChange={ handleDateFilterChange }
-                                InputLabelProps={ {
-                                    shrink: true,
-                                } }
-                            />
-                        </div>
-                        <div className='mb-3 sm:mb-5'></div>
-                        <div className={ s.filter_input }>
-                            <FormControl>
+                <Dialog open={ openModal } onClose={ handleModalClose } aria-labelledby="form-dialog-title"
+                        fullWidth={ true } onKeyDown={ (e) => e.key === 'Enter' && handleFilter() }>
+                    <DialogTitle id="form-dialog-title">Фильтр</DialogTitle>
+                    <DialogContent>
+                        <div className={ s.filter_container }>
+                            <div className='w-full'>
+                                <TextField
+                                    type="date"
+                                    label="Начальная дата"
+                                    name="startDate"
+                                    className='w-full'
+                                    value={ dateFilter.startDate }
+                                    onChange={ handleDateFilterChange }
+                                    InputLabelProps={ {
+                                        shrink: true,
+                                    } }
+                                />
+                            </div>
+                            <div className='mb-3 sm:mb-5'></div>
+                            <div className='w-full'>
+                                <TextField
+                                    type="date"
+                                    label="Конечная дата"
+                                    name="endDate"
+                                    className='w-full'
+                                    value={ dateFilter.endDate }
+                                    onChange={ handleDateFilterChange }
+                                    InputLabelProps={ {
+                                        shrink: true,
+                                    } }
+                                />
+                            </div>
+                            <div className='mb-3 sm:mb-5'></div>
+                            <div className='w-full'>
                                 <InputLabel id="status-filter-label">Статус</InputLabel>
                                 <Select
                                     labelId="status-filter-label"
                                     id="status-filter"
                                     value={ statusFilter }
-                                    className='min-w-[215px] sm:min-w-[300px]'
+                                    className='w-full'
                                     onChange={ handleStatusFilterChange }
                                 >
                                     <MenuItem value="">Все</MenuItem>
@@ -197,22 +212,29 @@ const Payments = ({isFetching, data}: PaymentsProps) => {
                                     <MenuItem value="1">Отправлено в банк</MenuItem>
                                     <MenuItem value="-1">Ошибка</MenuItem>
                                 </Select>
-                            </FormControl>
+                            </div>
                         </div>
-                    </div>
-                </DialogContent>
-                <DialogActions>
-                    <button className={styles.BaseButton} onClick={ handleModalClose }>
-                        Отменить
-                    </button>
-                    <button className={styles.BaseButton} onClick={ handleFilter }>
-                        Применить
-                    </button>
-                </DialogActions>
-            </Dialog>
+                    </DialogContent>
+                    <DialogActions>
+                        <button
+                            className={ `${ styles.BaseButton } ${
+                                isFilterActive ? '' : 'hidden'
+                            }` }
+                            onClick={ handleResetFilter }
+                        >
+                            Сбросить фильтр
+                        </button>
+                        <button className={ styles.BaseButton } onClick={ handleModalClose }>
+                            Отменить
+                        </button>
+                        <button className={ styles.BaseButton } onClick={ handleFilter }>
+                            Применить
+                        </button>
+                    </DialogActions>
+                </Dialog>
+            </div>
         </div>
-</div>
-)
+    )
 }
 
 export default Payments;

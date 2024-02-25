@@ -6,6 +6,7 @@ import {useGetPaymentsAgent} from "@/hooks/payments/payments";
 import Preloader from "@/components/Preloader/Preloader";
 import {useRouter} from "next/navigation";
 import Cookies from "js-cookie";
+import Layout from "@/components/Layout/Layout";
 
 function LoginPage() {
     const router = useRouter()
@@ -22,8 +23,8 @@ function LoginPage() {
         error: paymentsAgentError,
     } = useGetPaymentsAgent();
 
-    if ( !paymentsAgentData || paymentsAgentIsFetching) {
-        return <Preloader />;
+    if (!paymentsAgentData || paymentsAgentIsFetching) {
+        return <Preloader/>;
     }
 
     if (paymentsAgentError) {
@@ -31,9 +32,11 @@ function LoginPage() {
     }
 
     return (
-        <div className='mx-5 mt-10'>
-            <Payments data={paymentsAgentData} isFetching={paymentsAgentIsFetching} />
-        </div>
+        <Layout>
+            <div className='mx-5 mt-10'>
+                <Payments data={ paymentsAgentData } isFetching={ paymentsAgentIsFetching }/>
+            </div>
+        </Layout>
     );
 }
 

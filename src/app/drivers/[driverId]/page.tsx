@@ -10,6 +10,7 @@ import {useGetCarInfo, useGetDriversInfo} from "@/hooks/drivers/drivers";
 import {IAddEditDriver} from "@/interfaces/types";
 import Preloader from "@/components/Preloader/Preloader";
 import Cookies from "js-cookie";
+import Layout from "@/components/Layout/Layout";
 
 const DetailPage = () => {
     const router = useRouter()
@@ -35,21 +36,20 @@ const DetailPage = () => {
     }
 
     return (
-        <div>
+        <Layout>
             <div className='flex flex-col sm:flex-row sm:justify-center gap-1 lg:gap-8 mx-5'>
                 <button type="submit" className={ s.BaseButton }
-                        onClick={ () => router.push(`${ pathName }/orders`) }>Перейти к заказам водителя
+                        onClick={ () => router.push(`${ pathName }/orders`) }>Заказы водителя
                 </button>
                 <button type="submit" className={ s.BaseButton }
-                        onClick={ () => router.push(`${ pathName }/transactions`) }>Перейти к истории баланса
-                    водителя
+                        onClick={ () => router.push(`${ pathName }/transactions`) }>Баланс водителя
                 </button>
                 <button type="submit" className={ s.BaseButton }
-                        onClick={ () => router.push(`${ pathName }/analytics`) }>Перейти к аналитике водителя
+                        onClick={ () => router.push(`${ pathName }/analytics`) }>Аналитика водителя
                 </button>
             </div>
             <DriversDetail driverInfoData={driverInfoData} carInfoData={carInfoData}/>
-        </div>
+        </Layout>
     );
 }
 

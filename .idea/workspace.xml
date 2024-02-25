@@ -5,8 +5,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c53af9a4-9bab-453f-b0b4-2e6e23d80dbd" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/public/arrow_back.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/arrow_down.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/arrow_left.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/arrow_right.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Layout/Layout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/formateData.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/arrow-dropdown.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/drivers/[driverId]/analytics/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/drivers/[driverId]/analytics/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/drivers/[driverId]/orders/[orderId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/drivers/[driverId]/orders/[orderId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/drivers/[driverId]/orders/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/drivers/[driverId]/orders/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/drivers/[driverId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/drivers/[driverId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/drivers/[driverId]/transactions/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/drivers/[driverId]/transactions/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/payments/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/payments/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CreateNewDriver/CreateNewDriver.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CreateNewDriver/CreateNewDriver.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Drivers/Drivers.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Drivers/Drivers.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/EditDriver/EditDriver.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/EditDriver/EditDriver.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Header/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Layout/Header/Header.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Payments/Payments.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Payments/Payments.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/screen/DetailOrder/DetailOrder.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/screen/DetailOrder/DetailOrder.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/screen/DriverAnalytics/DriverAnalytics.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/screen/DriverAnalytics/DriverAnalytics.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/screen/DriverDetail/DriversDetail.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/screen/DriverDetail/DriversDetail.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/screen/Login/Login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/screen/Login/Login.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/screen/OrderTable/OrderTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/screen/OrderTable/OrderTable.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/screen/Transaction/Transaction.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/screen/Transaction/Transaction.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ui/genetal-css/general.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/genetal-css/general.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/drivers/drivers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/drivers/drivers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/login/login.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/login/login.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/interfaces/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/interfaces/types.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/services/main.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/main.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/tablePagitaion.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/tablePagitaion.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,8 +47,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="TypeScript JSX File" />
         <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
       </list>
     </option>
   </component>
@@ -50,7 +81,7 @@
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/я и мой код/lk-agenta — копия&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/я и мой код/lk-agenta/public&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -63,21 +94,21 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\я и мой код\lk-agenta\public" />
       <recent name="D:\я и мой код\lk-agenta\src\components\EditDriver" />
       <recent name="D:\я и мой код\lk-agenta\src\app\drivers\[driverId]\analytics" />
       <recent name="D:\я и мой код\lk-agenta\src\app\drivers\[driverId]\transactions" />
       <recent name="D:\я и мой код\lk-agenta\src\app\drivers\[driverId]" />
-      <recent name="D:\я и мой код\lk-agenta\public" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\я и мой код\lk-agenta\src\components\Layout" />
       <recent name="D:\я и мой код\lk-agenta" />
       <recent name="D:\я и мой код\lk-agenta\src\components" />
       <recent name="D:\я и мой код\lk-agenta\src\components\ui\CreateNewCarModal" />
       <recent name="D:\я и мой код\lk-agenta\src\components\screen" />
-      <recent name="D:\я и мой код\lk-agenta\src\app\drivers\[driverId]" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.build">
+  <component name="RunManager" selected="npm.dev">
     <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -100,8 +131,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.build" />
         <item itemvalue="npm.dev" />
+        <item itemvalue="npm.build" />
       </list>
     </recent_temporary>
   </component>
@@ -213,7 +244,23 @@
       <workItem from="1708258595915" duration="2364000" />
       <workItem from="1708262830745" duration="421000" />
       <workItem from="1708263305779" duration="9181000" />
-      <workItem from="1708344827113" duration="5607000" />
+      <workItem from="1708344827113" duration="6836000" />
+      <workItem from="1708427142347" duration="564000" />
+      <workItem from="1708427907384" duration="5000" />
+      <workItem from="1708428248110" duration="719000" />
+      <workItem from="1708492072470" duration="181000" />
+      <workItem from="1708602134039" duration="8283000" />
+      <workItem from="1708628836072" duration="3008000" />
+      <workItem from="1708673221543" duration="1188000" />
+      <workItem from="1708674431834" duration="358000" />
+      <workItem from="1708674882775" duration="265000" />
+      <workItem from="1708675172049" duration="17569000" />
+      <workItem from="1708709225420" duration="70000" />
+      <workItem from="1708772230987" duration="6686000" />
+      <workItem from="1708799438581" duration="1776000" />
+      <workItem from="1708845381394" duration="320000" />
+      <workItem from="1708845726937" duration="456000" />
+      <workItem from="1708863551054" duration="6564000" />
     </task>
     <servers />
   </component>

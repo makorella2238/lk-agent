@@ -5,8 +5,6 @@ import {usePathname, useRouter} from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import s from "@/components/ui/genetal-css/general.module.css";
-import {useDispatch} from "react-redux";
-import {setIsAuthFalse} from "@/Redux/app/app-slice";
 import Cookies from "js-cookie";
 
 type NavLink = {
@@ -24,18 +22,16 @@ const navLinks: NavLink[] = [
 const Header: FC = () => {
     const pathname = usePathname();
     const router = useRouter();
-    const dispatch = useDispatch();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+    const isAdmin = Cookies.get("admin") === "1";
     function handleLogout() {
         Cookies.remove("token");
         Cookies.remove("agentId");
-        dispatch(setIsAuthFalse());
         router.push("login");
     }
 
     return (
-        <div className="p-1 sm:p-3 flex justify-between w-full text-2xl shadow-sm items-center border-b-2">
+        <div className="p-1 sm:p-3 flex justify-between w-full shadow-sm items-center border-b-2">
             <div className="flex items-center">
                 <Link href="/">
                     <div className="flex items-center cursor-pointer">
@@ -74,13 +70,14 @@ const Header: FC = () => {
                 <div className="fixed inset-0 bg-white z-50 sm:hidden">
                     <div className="flex flex-col items-center py-8">
                         { navLinks.map((link) => (
+                            (link.path !== "/admin" || isAdmin) && (
                             <Link
                                 key={ link.path }
                                 href={ link.path }
                                 onClick={ () => setIsMenuOpen(false) }
                                 className={ `${
                                     pathname === link.path ? "relative" : ""
-                                } text-black font-bold text-2xl transition-color hover:text-emerald-500 mb-4` }
+                                } text-black font-bold text-lg transition-color hover:text-emerald-500 mb-4` }
                             >
                                 { link.label }
                                 { pathname === link.path && (
@@ -90,7 +87,7 @@ const Header: FC = () => {
                                     ></span>
                                 ) }
                             </Link>
-                        )) }
+                        )) )}
                         <button
                             className="absolute top-3 right-3"
                             onClick={ () => setIsMenuOpen(!isMenuOpen) }
@@ -106,26 +103,27 @@ const Header: FC = () => {
                 } block sm:flex sm:items-center sm:ml-5` }
             >
                 { navLinks.map((link) => (
+                    (link.path !== "/admin" || isAdmin) && (
                     <Link
                         key={ link.path }
                         href={ link.path }
                         className={ `${
                             pathname === link.path ? "relative" : ""
-                        }  sm:mr-3 lg:mr-6 text-black font-bold text-lg lg:text-2xl transition-color hover:text-emerald-500 lg:ml-5` }
+                        } text-black font-bold text-lg transition-color hover:text-emerald-500 mx-3 md:mx-5 lg:mx-7` }
                     >
                         { link.label }
                         { pathname === link.path && (
                             <span
-                                className="absolute bottom-[-24px] left-0 w-full h-1 bg-emerald-600"
+                                className="absolute bottom-[-25px] left-0 w-full h-1 bg-emerald-600"
                                 aria-hidden="true"
                             ></span>
                         ) }
                     </Link>
-                )) }
+                )) )}
             </div>
             <div className={ `${ isMenuOpen ? "block" : "hidden" } block sm:flex sm:items-center sm:ml-5` }>
                 <button
-                    className={ `${ s.BaseButton } min-w-16 text-xl mt-0 lg:mr-3.5` }
+                    className={ `${ s.BaseButton } min-w-16 text-lg mt-0 lg:mr-3.5` }
                     type="submit"
                     onClick={ handleLogout }
                 >
