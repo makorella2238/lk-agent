@@ -1,11 +1,12 @@
 'use client'
 
-import s from './Detail.module.css'
+import s from '@/components/ui/genetal-css/general.module.css'
 import React from "react";
 import {formatCategory, getStatusLabel} from "@/components/screen/OrderTable/OrderTable";
 import Image from "next/image";
 import Cookies from "js-cookie";
 import {formatDateAndClock, formatPrice} from "@/utils/formateData";
+import {useRouter} from "next/navigation";
 
 export type IOrderDetails = {
     id: number;
@@ -36,7 +37,7 @@ type DetailOrderProps = {
 }
 
 const DetailOrder = ({data}: DetailOrderProps) => {
-
+    const router = useRouter()
     const driverFIO = Cookies.get('FIO')
     const open2GIS = (lat: number, lon: number) => {
         const url = `https://2gis.ru/search/${ lat }%2C${ lon }`
@@ -44,7 +45,12 @@ const DetailOrder = ({data}: DetailOrderProps) => {
     };
 
     return (
-        <div className="container mx-auto max-w-2xl">
+        <div className="relative container mx-auto max-w-2xl">
+            <div className={ `absolute top-4 left-3 ${ s.BaseButton } p-2 flex ml-5 transition-colors ` }
+                 onClick={ () => router.back() }>
+                <Image className='sm:mr-3' src='/arrow_back.svg' alt='arrow_back' width={ 20 } height={ 20 }/>
+                <p className='hidden sm:block'>Назад</p>
+            </div>
             <div className="card border-2 border-gray-300 shadow-lg p-4">
                 <h2 className="title text-2xl font-bold text-center mb-4">
                     Детали заказа
@@ -67,7 +73,7 @@ const DetailOrder = ({data}: DetailOrderProps) => {
 
                 <div className={ s.borderContainer }>
                     Категория:{ ' ' }
-                    <span className={ s.bodyText }>{  data.type && formatCategory(data.type) }</span>
+                    <span className={ s.bodyText }>{ data.type && formatCategory(data.type) }</span>
                 </div>
 
                 <div className={ s.borderContainer }>
@@ -95,7 +101,8 @@ const DetailOrder = ({data}: DetailOrderProps) => {
 
                 <div className={ `flex items-center mb-2 ${ s.borderContainer }` }>
                     <p className="mr-3">Точка А:</p>
-                    <div className='flex items-center gap-3 cursor-pointer' onClick={ () => open2GIS(data.pointFromLat, data.pointFromLon) }>
+                    <div className='flex items-center gap-3 cursor-pointer'
+                         onClick={ () => open2GIS(data.pointFromLat, data.pointFromLon) }>
                         <a href="#" className="link text-blue-500 underline hover:text-green-500">
                             { data.pointFromName }
                         </a>
@@ -119,11 +126,11 @@ const DetailOrder = ({data}: DetailOrderProps) => {
                 </div>
                 <div className={ s.borderContainer }>
                     Тип оплаты: { ' ' } <span
-                    className={ s.bodyText }>{ data.paymentMethod === 'sbp' || data.paymentMethod === 'acquiring'  && 'Безналично' || data.paymentMethod == 'done' && 'Уже оплачено' }</span>
+                    className={ s.bodyText }>{ data.paymentMethod === 'sbp' || data.paymentMethod === 'acquiring' && 'Безналично' || data.paymentMethod == 'done' && 'Уже оплачено' }</span>
                 </div>
                 <div className={ s.borderContainer }>
                     Общая стоимость:{ ' ' }
-                    <span className={ s.bodyText }>{ data.summaDelivery && formatPrice(data.summaDelivery)}</span>
+                    <span className={ s.bodyText }>{ data.summaDelivery && formatPrice(data.summaDelivery) }</span>
                 </div>
                 <div className={ s.borderContainer }>
                     Работа сервиса:{ ' ' }
@@ -135,7 +142,8 @@ const DetailOrder = ({data}: DetailOrderProps) => {
                 </div>
                 <div className={ s.borderContainer }>
                     Заработок Курьера:{ ' ' }
-                    <span className={ s.bodyText }>{ data.summaCourierFinal && formatPrice(data.summaCourierFinal) }</span>
+                    <span
+                        className={ s.bodyText }>{ data.summaCourierFinal && formatPrice(data.summaCourierFinal) }</span>
                 </div>
             </div>
         </div>

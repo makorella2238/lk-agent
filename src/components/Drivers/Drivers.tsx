@@ -26,6 +26,7 @@ import {
 } from '@material-ui/core';
 import {renderPagination} from "@/utils/tablePagitaion";
 import {formatDate, formatPrice} from "@/utils/formateData";
+import DeleteDriverModal from "@/components/ui/DeletaDriverModal/DeletaDriverModal";
 
 export const formatStatus = (status: number) => {
     switch (status) {
@@ -55,7 +56,7 @@ export const formatWorkUsl = (workUsl: string) => {
     }
 };
 
-const formatState = (state: number) => {
+export const formatState = (state: number) => {
     switch (state) {
         case 1:
             return 'Оффлайн';
@@ -106,7 +107,9 @@ const DriversTable = ({
         filter.endLastOrderDate
     const [isCreateNewDriverModal, setIsCreateNewDriverModal] = useState(false);
     const [openModal, setOpenModal] = useState(false);
+    const [driverDeleteModal, setDriverDeleteModal] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    const [deleteDriverId, setDeleteDriverId] = useState(null);
     const [filteredDrivers, setFilteredDrivers] = useState(() => []);
 
     const handleFilterChange = (e: React.ChangeEvent<{ name?: string; value: unknown }>, column: string) => {
@@ -171,7 +174,10 @@ const DriversTable = ({
             endLastOrderDate: '',
         })
     };
-    const handleDriverDelete = useDeleteDriver()
+
+    const driverCloseModal = () => {
+        setDriverDeleteModal(false)
+    }
 
     return (
         <div className={ `border-l-3 border-emerald-200/50 ${ styles.border_l }` }>
@@ -218,7 +224,7 @@ const DriversTable = ({
                                     <TableRow
                                         key={item.driverId}
                                         onClick={() => router.push(`/drivers/${item.driverId}`)}
-                                        className='hover:bg-gray-100'
+                                        className='hover:bg-gray-100 cursor-pointer'
                                     >
                                         <TableCell>
                                                 {`${item.surname} ${item.name} ${item.patronymic}`}
@@ -248,7 +254,8 @@ const DriversTable = ({
                                                     className={styles.deleteButton}
                                                     onClick={(event) => {
                                                         event.stopPropagation();
-                                                        handleDriverDelete(item.driverId);
+                                                        setDriverDeleteModal(true)
+                                                        setDeleteDriverId(item.driverId)
                                                     }}
                                                 >
                                                     <Image src="/remove.svg" alt="delete" width={20} height={20} />
@@ -361,6 +368,7 @@ const DriversTable = ({
                     </div>
                 </DialogActions>
             </Dialog>
+            {driverDeleteModal && <DeleteDriverModal open={driverDeleteModal} onClose={driverCloseModal} driverId={deleteDriverId}/>}
             { isCreateNewDriverModal &&
                 <CreateNewDriver setIsModalOpen={ setIsCreateNewDriverModal } isModalOpen={ isCreateNewDriverModal }/> }
             { renderPagination(currentPage, total, pageSize, handleChangePage) }

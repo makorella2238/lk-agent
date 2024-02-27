@@ -9,7 +9,7 @@ export const renderPagination = (currentPage: number, total: number, pageSize: n
     }
 
     return (
-        <div className='flex justify-center mt-3'>
+        <div className='flex justify-center gap-3 mt-3'>
             {pages.map((page) => (
                 <button
                     key={page}

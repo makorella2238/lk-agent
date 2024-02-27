@@ -6,8 +6,13 @@ import {useGetAllDrivers} from "@/hooks/drivers/drivers";
 import Preloader from "@/components/Preloader/Preloader";
 import EditDriver from "@/components/EditDriver/EditDriver";
 
-const Home = () => {
-    const pageSize = 10; // Количество элементов на странице Drivers
+type HomeProps = {
+    agentIdError: Error
+    agentId: number
+}
+
+const Home = ({agentIdError, agentId}: HomeProps) => {
+    const pageSize = 30; // Количество элементов на странице Drivers
     const [offset, setOffset] = useState(0);
     const [isEditDriverModal, setIsEditDriverModal] = useState(false);
     const [editedDriverId, setEditedDriverId] = useState<number>(null);
@@ -16,13 +21,13 @@ const Home = () => {
         data,
         isFetching,
         error,
-    } = useGetAllDrivers(offset, pageSize);
+    } = useGetAllDrivers(offset, pageSize, agentId);
 
     if (!data || isFetching) {
         return <Preloader/>;
     }
 
-    if (error) {
+    if (error || agentIdError) {
         return <p className="text-red-600">Ошибка при получении данных</p>;
     }
 

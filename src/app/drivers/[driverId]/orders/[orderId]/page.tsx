@@ -18,13 +18,8 @@ const OrderDetailPage = () => {
             router.push('/login')
         }
     }, [token]);
-    // const {push} = useRouter()
-    // const token = Cookies.get('token')
-    // if (!token) {
-    //     push('/login')
-    // }
-    const params = useParams()
 
+    const params = useParams()
     // @ts-ignore
     const {data, isFetching, error} = useGerOrderDetail(params.driverId, params.orderId)
 

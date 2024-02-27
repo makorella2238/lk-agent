@@ -37,7 +37,7 @@ const DetailPage = () => {
 
     return (
         <Layout>
-            <div className='flex flex-col sm:flex-row sm:justify-center gap-1 lg:gap-8 mx-5'>
+            <div className='flex flex-col sm:flex-row sm:justify-center gap-3 lg:gap-8 mx-5'>
                 <button type="submit" className={ s.BaseButton }
                         onClick={ () => router.push(`${ pathName }/orders`) }>Заказы водителя
                 </button>

@@ -4,6 +4,11 @@ export type ILogin = {
     login: string
     password: string
 }
+export type IGetAgentId = {
+    agentId: number
+    admin: 1 | -1
+    answer: string
+}
 
 export type ILoginResponse = {
     answer: string
@@ -65,6 +70,7 @@ export type IDriverInfo = {
     dateBirth : string;
     telephone: string;
     status: 2 | 1 | -1
+    state: 1 | 2 | 3
     driverLicenceSeries: string;
     driverLicenceNumber: string;
     driverLicenceCountry: string;

@@ -7,26 +7,17 @@ import {
     ICarInfo,
     IDriverAnalytic,
     IDriverInfo,
-    IDriverTransactions
+    IDriverTransactions, IGetAgentId
 } from "@/interfaces/types";
 import {Dispatch, SetStateAction} from "react";
 import {IOrderDetails} from "@/components/screen/DetailOrder/DetailOrder";
-import Cookies from "js-cookie";
 
-export const useGetAllDrivers = (offset: number, count: number) => {
-    const queryClient = useQueryClient();
-
-    const idAgent = Cookies.get('agentId')
-    const newToken = Cookies.get('token')
-    if (!idAgent) {
-        debugger
-        queryClient.invalidateQueries({queryKey: ['getAllDrivers']})
-    }
+export const useGetAllDrivers = (offset: number, count: number, agentId: number) => {
     return useQuery<IAllDrivers>({
             queryKey: ['getAllDrivers'],
             queryFn: async () => {
                 // @ts-ignore
-                return await mainService.getAllDrivers({offset, count, idAgent, newToken});
+                return await mainService.getAllDrivers({offset, count, agentId});
             }
         }
     )
@@ -36,6 +27,14 @@ export const useGetAllOrders = (offset: number, count: number, driverId: string)
         queryKey: ['getAllOrders'],
         queryFn: async () => {
             return await mainService.getAllOrders({offset, count, driverId});
+        },
+    });
+};
+export const useGetAgentId = () => {
+    return useQuery<IGetAgentId>({
+        queryKey: ['getAllOrders'],
+        queryFn: async () => {
+            return await mainService.getAgentId();
         },
     });
 };
@@ -180,8 +179,25 @@ export const useDeleteDriver = () => {
         },
     })
     const handleDeleteDriver = (driverId: number) => {
-        // @ts-ignore
         deleteDriverMutation.mutate(driverId)
     }
     return handleDeleteDriver
+}
+export const useDeleteCar = (driverId: string | string[]) => {
+    const queryClient = useQueryClient();
+
+    const deleteCarMutation = useMutation({
+        mutationKey: ['deleteCar'],
+        // @ts-ignore
+        mutationFn: (carId: number) => {
+            return mainService.deleteCar(carId, driverId)
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ['getCarInfo']})
+        },
+    })
+    const handleDeleteCar = (carId: number) => {
+        deleteCarMutation.mutate(carId)
+    }
+    return handleDeleteCar
 }

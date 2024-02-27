@@ -261,7 +261,7 @@ const EditDriver = ({
                                 ) }
                             </div>
                             { requestErrors && <span className='text-red-600'>{ requestErrors }</span> }
-                            <div className='float-right mt-3'>
+                            <div className='flex justify-end mt-3'>
                                 <button
                                     type="submit"
                                     className={ s.BaseButton }

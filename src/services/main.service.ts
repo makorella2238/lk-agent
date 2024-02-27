@@ -14,6 +14,7 @@ import {
 import Cookies from 'js-cookie';
 import {IOrderDetails} from "@/components/screen/DetailOrder/DetailOrder";
 
+
 const instance = axios.create({
     withCredentials: true,
     baseURL: 'http://95.154.93.88:32768/'
@@ -25,25 +26,21 @@ axios.interceptors.response.use(
         const originalRequest = error.config;
 
         if (
-            error?.response?.data?.answer === -1 && // Проверка значения answer
-            originalRequest &&
-            !originalRequest._isRetry
+            error?.response?.data?.answer === -1
+            // originalRequest &&
+            // !originalRequest._isRetry
         ) {
             originalRequest._isRetry = true;
             Cookies.remove('token');
-            Cookies.remove('agentId');
         }
-
         throw error;
     }
 );
-
 const doubleMd5 = (password: string) => {
     const hash1 = md5(password).toString();
     return md5(hash1).toString();
 };
 
-const agentId = Cookies.get('agentId')
 const token = Cookies.get('token')
 export const mainService = {
     // @ts-ignore
@@ -51,12 +48,21 @@ export const mainService = {
         const {data} = await instance.get(`api/?method=agent.auth&login=${ login }&password=${ doubleMd5(password) }`);
         return data;
     },
-    async getPaymentsAgent() {
+    async getAgentId() {
+        const newToken = Cookies.get('token')
+        const {data} = await instance.get(`http://95.154.93.88:32768/api/?method=agent.id&token=${newToken}`);
+        if (data.answer === '-1' || data.answer === '1') {
+            Cookies.remove('token');
+        }
+        return data;
+    },
+    async getPaymentsAgent(agentId: number) {
         const {data} = await instance.get<IPaymentsAgent>(`api/?method=agent.payments&token=${token}&agentId=${ agentId }`);
         return data;
     },
-    async getAllDrivers({offset, count, idAgent, newToken}: { offset: number, count: number, idAgent: string, newToken: string }) {
-        const {data} = await instance.get<IAllDrivers>(`api/?method=driver.getall&token=${newToken}&agentId=${ idAgent }&offset=${ offset }&count=${ count }`);
+    async getAllDrivers({offset, count, agentId}: { offset: number, count: number, agentId: number}) {
+        const newToken = Cookies.get('token')
+        const {data} = await instance.get<IAllDrivers>(`api/?method=driver.getall&token=${newToken}&agentId=${ agentId }&offset=${ offset }&count=${ count }`);
         return data;
     },
 
@@ -87,7 +93,7 @@ export const mainService = {
         return data;
     },
 
-    async createNewCar(requestData: ICarInfo, driverId: string) {
+    async createNewCar(requestData: ICarInfo) {
         const formData = new FormData();
         //@ts-ignore
         formData.append('agentId', agentId);
@@ -108,6 +114,7 @@ export const mainService = {
     },
 
     async createNewDriver({requestData}: any) {
+
         const modifiedRequestData = new FormData();
         //@ts-ignore
         modifiedRequestData.append('agentId', agentId);
@@ -125,10 +132,11 @@ export const mainService = {
         return data;
     },
 
-    async editDriver({requestData, driverId}: any) {
+    async editDriver({requestData}: any) {
+        const agentIdData = await mainService.getAgentId()
         const modifiedRequestData = new FormData();
         // @ts-ignore
-        modifiedRequestData.append('agentId', agentId);
+        modifiedRequestData.append('agentId', agentIdData.agentId);
         modifiedRequestData.append('token', token);
         modifiedRequestData.append('method', 'driver.addedit');
         modifiedRequestData.append('editid', requestData.driverId);
@@ -143,9 +151,10 @@ export const mainService = {
     },
 
     async deleteDriver(driverId: number) {
+        const agentIdData = await mainService.getAgentId()
         const modifiedRequestData = new FormData();
         // @ts-ignore
-        modifiedRequestData.append('agentId', agentId);
+        modifiedRequestData.append('agentId', agentIdData.agentId);
         modifiedRequestData.append('token', token);
         modifiedRequestData.append('method', 'driver.addedit');
         // @ts-ignore
@@ -155,6 +164,24 @@ export const mainService = {
 
         const {data} = await instance.post('api/?method=', modifiedRequestData);
         return data;
-    }
+    },
 
+    async deleteCar(carId: number, driverId: string | string[]) {
+        const agentIdData = await mainService.getAgentId()
+
+        const modifiedRequestData = new FormData();
+        // @ts-ignore
+        modifiedRequestData.append('agentId', agentIdData.agentId);
+        // @ts-ignore
+        modifiedRequestData.append('driverId', driverId);
+        modifiedRequestData.append('token', token);
+        modifiedRequestData.append('method', 'driver.car_addedit');
+        // @ts-ignore
+        modifiedRequestData.append('remove', 1);
+        // @ts-ignore
+        modifiedRequestData.append('editid', carId.toString());
+
+        const {data} = await instance.post('api/?method=', modifiedRequestData);
+        return data;
+    },
 }

@@ -17,18 +17,19 @@ import {
     TextField
 } from "@material-ui/core";
 import Image from "next/image";
-import Preloader from "@/components/Preloader/Preloader";
 import s from './Payments.module.css'
 import styles from '@/components/ui/genetal-css/general.module.css'
-import {IPaymentsAgent} from "@/interfaces/types";
 import {formatDate, formatPrice} from "@/utils/formateData";
+import {IPaymentsAgent} from "@/interfaces/types";
 
 type PaymentsProps = {
-    isFetching: boolean;
-    data: IPaymentsAgent;
+    data: IPaymentsAgent
 };
 
-const Payments = ({isFetching, data}: PaymentsProps) => {
+const Payments = ({data}: PaymentsProps) => {
+    const [statusFilter, setStatusFilter] = useState('');
+    const [openModal, setOpenModal] = useState(false);
+    const [filteredPayments, setFilteredPayments] = useState(() => []);
     const [dateFilter, setDateFilter] = useState<{
         startDate: Date | string;
         endDate: Date | string
@@ -36,15 +37,7 @@ const Payments = ({isFetching, data}: PaymentsProps) => {
         startDate: '',
         endDate: '',
     });
-    const [statusFilter, setStatusFilter] = useState('');
-    const [openModal, setOpenModal] = useState(false);
-    const [filteredPayments, setFilteredPayments] = useState(() => []);
     const isFilterActive = statusFilter || dateFilter.endDate || dateFilter.endDate
-
-    if (isFetching || !data) {
-        return <Preloader/>;
-    }
-
     const handleDateFilterChange = (event: {
         target: {
             name: any;
@@ -67,17 +60,19 @@ const Payments = ({isFetching, data}: PaymentsProps) => {
 
     useEffect(() => {
         handleFilter()
-    }, []);
+    }, [dateFilter, statusFilter]);
 
     const handleFilter = () => {
         setOpenModal(false);
 
         if (!dateFilter.startDate && !dateFilter.endDate && !statusFilter) {
+            debugger
             setFilteredPayments(data.payments);
             return;
         }
 
-        const filteredData = data.payments.filter((payment) => {
+        const filteredData = data.payments && data.payments.filter((payment) => {
+            debugger
             const paymentDate = payment.dateRequestPayment.split('T')[0];
             const startDate = dateFilter.startDate;
             const endDate = dateFilter.endDate;
@@ -140,7 +135,7 @@ const Payments = ({isFetching, data}: PaymentsProps) => {
                         <TableBody>
                             { filteredPayments.length > 0 ?
                                 filteredPayments.map((payment) => (
-                                    <TableRow key={ payment.paymentId } className='hover:bg-gray-100'>
+                                    <TableRow key={ payment.paymentId } className='hover:bg-gray-100 cursor-pointer'>
                                         <TableCell>{ payment.paymentId }</TableCell>
                                         <TableCell>
                                             { payment.dateRequestPayment.split('T')[0].split('-').reverse().join('.') }
@@ -216,20 +211,22 @@ const Payments = ({isFetching, data}: PaymentsProps) => {
                         </div>
                     </DialogContent>
                     <DialogActions>
-                        <button
-                            className={ `${ styles.BaseButton } ${
-                                isFilterActive ? '' : 'hidden'
-                            }` }
-                            onClick={ handleResetFilter }
-                        >
-                            Сбросить фильтр
-                        </button>
-                        <button className={ styles.BaseButton } onClick={ handleModalClose }>
-                            Отменить
-                        </button>
-                        <button className={ styles.BaseButton } onClick={ handleFilter }>
-                            Применить
-                        </button>
+                        <div className='flex flex-col gap-2 sm:flex-row'>
+                            <button
+                                className={ `${ styles.BaseButton } ${
+                                    isFilterActive ? '' : 'hidden'
+                                }` }
+                                onClick={ handleResetFilter }
+                            >
+                                Сбросить фильтр
+                            </button>
+                            <button className={ styles.BaseButton } onClick={ handleModalClose }>
+                                Отменить
+                            </button>
+                            <button className={ styles.BaseButton } onClick={ handleFilter }>
+                                Применить
+                            </button>
+                        </div>
                     </DialogActions>
                 </Dialog>
             </div>

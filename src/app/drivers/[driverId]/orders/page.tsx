@@ -20,7 +20,7 @@ const DetailPage = () => {
     }, [token]);
 
     const params = useParams()
-    const pageSize = 5; // Количество элементов на странице
+    const pageSize = 30; // Количество элементов на странице
     const [offset, setOffset] = useState(0);
     // @ts-ignore
     const {data, isFetching, error} = useGetAllOrders(offset, pageSize, params.driverId)

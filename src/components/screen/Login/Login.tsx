@@ -46,7 +46,7 @@ const LoginForm = () => {
                                { ...register("password", {required: true}) }/>
                         {errors.password && <span className='text-red-600'>Это поле обязательное для заполнения</span>}
                     </div>
-                    <span className='text-red-600 text-lg'>{requestErrors && requestErrors === '1' && 'не все аргументы заполнены' || requestErrors === '2' && 'пара логин-пароль неверная'}</span>
+                    <span className='text-red-600 text-lg'>{requestErrors && requestErrors === '1' && 'не все аргументы заполнены' || requestErrors === '2' && 'Логин или пароль введён неверно'}</span>
                     <button type="submit"
                             className={`w-full ${s.BaseButton}`}>Войти
                     </button>

@@ -207,7 +207,7 @@ const OrderTable = ({data, pageSize, setOffset, offset}: OrderTableMokDataProps)
                                 getCurrentPageOrders().map((order: any) => (
                                     <TableRow key={ order.id }
                                               onClick={ () => router.push(`orders/${ order.id }`) }
-                                              className='hover:bg-gray-100'>
+                                              className='hover:bg-gray-100 cursor-pointer'>
                                         <TableCell>{ order.uid }</TableCell>
                                         <TableCell>{ order.carName }</TableCell>
                                         <TableCell>{ order.type && formatCategory(order.type) }</TableCell>
@@ -238,6 +238,7 @@ const OrderTable = ({data, pageSize, setOffset, offset}: OrderTableMokDataProps)
                             value={ carFilter }
                             onChange={ handleCarFilterChange }
                             className='w-full'
+                            autoComplete='off'
                         />
 
                         <TextField

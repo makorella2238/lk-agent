@@ -17,12 +17,9 @@ export const LoginMutation = (setRequestErrors: Dispatch<SetStateAction<string |
         },
         onSuccess: (data: ILoginResponse) => {
             setRequestErrors(data.answer)
-            const {agentId, token} = data;
+            const {token} = data;
             if (data.answer === '0') {
-                debugger
-                Cookies.set('token', token);
-                Cookies.set('admin', String(data.admin));
-                Cookies.set('agentId', String(agentId));
+                Cookies.set('token', token, {secure: true, sameSite: 'strict' });
                 router.push('/')
             }
         },
