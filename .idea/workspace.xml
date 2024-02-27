@@ -5,33 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c53af9a4-9bab-453f-b0b4-2e6e23d80dbd" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/lk-agent.zip" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Payments/PaymentsContainer.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/ui/DeletaDriverModal/DeletaDriverModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/drivers/[driverId]/orders/[orderId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/drivers/[driverId]/orders/[orderId]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/drivers/[driverId]/orders/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/drivers/[driverId]/orders/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/drivers/[driverId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/drivers/[driverId]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/payments/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/payments/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Drivers/Drivers.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Drivers/Drivers.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/EditDriver/EditDriver.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/EditDriver/EditDriver.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Payments/Payments.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Payments/Payments.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/screen/DetailOrder/Detail.module.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/screen/DetailOrder/DetailOrder.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/screen/DetailOrder/DetailOrder.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/screen/DriverDetail/DriversDetail.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/screen/DriverDetail/DriversDetail.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/screen/Home/Home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/screen/Home/Home.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/screen/Login/Login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/screen/Login/Login.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/screen/OrderTable/OrderTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/screen/OrderTable/OrderTable.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ui/genetal-css/general.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/genetal-css/general.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/drivers/drivers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/drivers/drivers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/login/login.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/login/login.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/payments/payments.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/payments/payments.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/interfaces/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/interfaces/types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/main.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/main.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/tablePagitaion.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/tablePagitaion.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,26 +41,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/я и мой код/lk-agenta&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.ide.settings.web.browsers&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;D:\\я и мой код\\lk-agenta\\node_modules\\typescript\\lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "Merging master",
+    "last_opened_file_path": "D:/я и мой код/lk-agenta",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "yarn",
+    "settings.editor.selected.configurable": "reference.settings.ide.settings.web.browsers",
+    "ts.external.directory.path": "D:\\я и мой код\\lk-agenta\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\я и мой код\lk-agenta\public" />
@@ -258,7 +233,7 @@
       <workItem from="1708870762984" duration="111000" />
       <workItem from="1708952422423" duration="4575000" />
       <workItem from="1708975804010" duration="6398000" />
-      <workItem from="1709034111099" duration="10813000" />
+      <workItem from="1709034111099" duration="11145000" />
     </task>
     <servers />
   </component>
