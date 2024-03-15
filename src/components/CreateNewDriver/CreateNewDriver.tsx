@@ -5,6 +5,7 @@ import {IAddEditDriver, inputField} from "@/interfaces/types";
 import {useCreateNewDriver} from "@/hooks/drivers/drivers";
 import Preloader from "@/components/Preloader/Preloader";
 import {Dialog, DialogContent, DialogTitle} from "@material-ui/core";
+import TimeRestrictions from "@/components/ui/TimeRestrictions/TimeRestrictions";
 
 interface CreateNewDriverProps {
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
@@ -33,7 +34,8 @@ const CreateNewDriver = ({
         handleSubmit,
         formState: {errors},
         watch,
-        reset
+        reset,
+        setValue
     } = useForm<IAddEditDriver>();
 
     const [requestErrors, setRequestErrors] = useState('');
@@ -47,6 +49,7 @@ const CreateNewDriver = ({
             driverExpDate: requestData.driverExpDate.split('.').reverse().join('-'),
             driverLicenceDate: requestData.driverLicenceDate.split('.').reverse().join('-')
         };
+        formattedData.status = 2;
         handleCreateNewDriver(formattedData)
         setIsModalOpen(false)
     };
@@ -54,6 +57,7 @@ const CreateNewDriver = ({
     const workUslValue = watch("workUsl");
     const restrictPayments = watch("restrictPayments");
     const restrictOrders = watch("restrictOrders");
+    const restrictOrdersTimes = watch("restrictOrdersTimes");
 
     function handleCloseModal() {
         setIsModalOpen(false);
@@ -87,7 +91,8 @@ const CreateNewDriver = ({
                             )) }
 
                             <div className="mt-2 sm:mt-0 col-span-2">
-                                <label htmlFor="restrictPayments" className="text-xs sm:text-base block mb-1 sm:font-bold">
+                                <label htmlFor="restrictPayments"
+                                       className="text-xs sm:text-base block mb-1 sm:font-bold">
                                     Ограничение водителя для выплат
                                 </label>
                                 <select
@@ -102,7 +107,8 @@ const CreateNewDriver = ({
                                 </select>
                             </div>
                             { restrictPayments === 'percent' && <div className="mt-2 sm:mt-0 col-span-2">
-                                <label htmlFor="restrictPayments" className="text-xs sm:text-base block mb-1 sm:font-bold">
+                                <label htmlFor="restrictPayments"
+                                       className="text-xs sm:text-base block mb-1 sm:font-bold">
                                     Значение процента
                                 </label>
                                 <input
@@ -114,7 +120,8 @@ const CreateNewDriver = ({
                             </div> }
 
                             <div className="col-span-2">
-                                <label htmlFor="restrictOrders" className="text-xs sm:text-base block mb-1 sm:font-bold">
+                                <label htmlFor="restrictOrders"
+                                       className="text-xs sm:text-base block mb-1 sm:font-bold">
                                     Ограничение водителя
                                 </label>
                                 <select
@@ -132,32 +139,8 @@ const CreateNewDriver = ({
                             </div>
 
                             { restrictOrders === 'my_times' && (
-                                <div className='grid grid-cols-2 gap-2'>
-                                    <div className="col-span-2">
-                                        <label htmlFor='restrictOrdersTime1' className='text-xs sm:text-base sm:font-bold'>Время
-                                            ОТ</label>
-                                        <input
-                                            { ...register("restrictOrdersTime1", {
-                                                required: true,
-                                            }) }
-                                            type="date"
-                                            placeholder="Время ОТ"
-                                            className="border border-gray-300 p-2 rounded-lg w-full"
-                                        />
-                                    </div>
-                                    <div className="col-span-2">
-                                        <label htmlFor='restrictOrdersTime2' className='text-xs sm:text-base sm:font-bold'>Время
-                                            ДО</label>
-                                        <input
-                                            { ...register("restrictOrdersTime2", {
-                                                required: true,
-                                            }) }
-                                            type="date"
-                                            placeholder="Время ДО"
-                                            className="border border-gray-300 p-2 rounded-lg w-full"
-                                        />
-                                    </div>
-                                </div>
+                                <TimeRestrictions restrictOrdersTimes={ restrictOrdersTimes }
+                                                  setValue={ setValue }/>
                             ) }
 
                             <div className="col-span-2">

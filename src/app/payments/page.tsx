@@ -1,11 +1,12 @@
 'use client'
 
 import React, {useEffect} from "react";
-import Preloader from "@/components/Preloader/Preloader";
 import {useRouter} from "next/navigation";
 import Cookies from "js-cookie";
-import PaymentsContainer from "@/components/Payments/PaymentsContainer";
-import {useGetAgentId} from "@/hooks/drivers/drivers";
+import {useGetPaymentsAgent} from "@/hooks/payments/payments";
+import Payments from "@/components/screen/Payments/Payments";
+import Layout from "@/components/Layout/Layout";
+import Preloader from "@/components/Preloader/Preloader";
 
 function PaymentsPage() {
     const router = useRouter()
@@ -20,8 +21,8 @@ function PaymentsPage() {
         data,
         isFetching,
         error,
-    } = useGetAgentId();
-    debugger
+    } = useGetPaymentsAgent();
+
     if (!data || isFetching) {
         return <Preloader/>;
     }
@@ -31,7 +32,9 @@ function PaymentsPage() {
     }
 
     return (
-        <PaymentsContainer agentId={ data.agentId }/>
+        <Layout>
+            <Payments data={ data }/>
+        </Layout>
     );
 }
 

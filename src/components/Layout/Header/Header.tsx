@@ -1,6 +1,4 @@
-'use client'
-
-import React, {FC, useState} from "react";
+import React, {useState} from "react";
 import {usePathname, useRouter} from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -12,18 +10,32 @@ type NavLink = {
     label: string;
 };
 
-const navLinks: NavLink[] = [
-    {path: "/", label: "Водители"},
-    {path: "/payments", label: "Выплаты"},
-    {path: "/analytics", label: "Аналитика"},
-    {path: "/admin", label: "Администратор"},
-];
+const Header = ({admin}: { admin: number }) => {
+    const isAdmin = admin === 1
 
-const Header: FC = () => {
+    let navLinks: NavLink[]
+
+    if (isAdmin && Cookies.get("agentId")) {
+        navLinks = [
+            { path: "/", label: "Водители" },
+            { path: "/payments", label: "Выплаты" },
+            { path: "/analytics", label: "Аналитика" },
+            { path: "/admin", label: "Администратор" },
+        ];
+    } else if (isAdmin) {
+        navLinks = [{ path: "/admin", label: "Администратор" }];
+    } else {
+        navLinks = [
+            { path: "/", label: "Водители" },
+            { path: "/payments", label: "Выплаты" },
+            { path: "/analytics", label: "Аналитика" },
+        ];
+    }
+
     const pathname = usePathname();
     const router = useRouter();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const isAdmin = Cookies.get("admin") === "1";
+
     function handleLogout() {
         Cookies.remove("token");
         Cookies.remove("agentId");
@@ -70,24 +82,23 @@ const Header: FC = () => {
                 <div className="fixed inset-0 bg-white z-50 sm:hidden">
                     <div className="flex flex-col items-center py-8">
                         { navLinks.map((link) => (
-                            (link.path !== "/admin" || isAdmin) && (
-                            <Link
-                                key={ link.path }
-                                href={ link.path }
-                                onClick={ () => setIsMenuOpen(false) }
-                                className={ `${
-                                    pathname === link.path ? "relative" : ""
-                                } text-black font-bold text-lg transition-color hover:text-emerald-500 mb-4` }
-                            >
-                                { link.label }
-                                { pathname === link.path && (
-                                    <span
-                                        className="absolute bottom-[-5px] left-0 w-full h-1 bg-emerald-600"
-                                        aria-hidden="true"
-                                    ></span>
-                                ) }
-                            </Link>
-                        )) )}
+                                <Link
+                                    key={ link.path }
+                                    href={ link.path }
+                                    onClick={ () => setIsMenuOpen(false) }
+                                    className={ `${
+                                        pathname === link.path ? "relative" : ""
+                                    } text-black font-bold text-lg transition-color hover:text-emerald-500 mb-4` }
+                                >
+                                    { link.label }
+                                    { pathname === link.path && (
+                                        <span
+                                            className="absolute bottom-[-5px] left-0 w-full h-1 bg-emerald-600"
+                                            aria-hidden="true"
+                                        ></span>
+                                    ) }
+                                </Link>
+                            )) }
                         <button
                             className="absolute top-3 right-3"
                             onClick={ () => setIsMenuOpen(!isMenuOpen) }
@@ -103,7 +114,6 @@ const Header: FC = () => {
                 } block sm:flex sm:items-center sm:ml-5` }
             >
                 { navLinks.map((link) => (
-                    (link.path !== "/admin" || isAdmin) && (
                     <Link
                         key={ link.path }
                         href={ link.path }
@@ -119,7 +129,7 @@ const Header: FC = () => {
                             ></span>
                         ) }
                     </Link>
-                )) )}
+                )) }
             </div>
             <div className={ `${ isMenuOpen ? "block" : "hidden" } block sm:flex sm:items-center sm:ml-5` }>
                 <button

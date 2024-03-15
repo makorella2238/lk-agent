@@ -5,12 +5,12 @@ import s from '@/components/ui/genetal-css/general.module.css'
 import Image from "next/image";
 import {ICarInfo, IDriverInfo} from "@/interfaces/types";
 import CreateNewCarModal from "@/components/CreateNewCarModal/CreateNewCarModal";
-import {formatState, formatStatus, formatWorkUsl} from "@/components/Drivers/Drivers";
+import {formatState, formatStatus, formatWorkUsl} from "@/components/screen/Drivers/Drivers";
 import Cookies from "js-cookie";
 import {formatDate} from "@/utils/formateData";
 import {useDeleteCar} from "@/hooks/drivers/drivers";
 import {useParams} from "next/navigation";
-
+import DeleteItemModal from "@/components/ui/DeleteItemModal/DeleteItemModal";
 
 const DriversDetail = ({carInfoData, driverInfoData}: { carInfoData: ICarInfo, driverInfoData: IDriverInfo }) => {
     const [showCarInfo, setShowCarInfo] = useState(false);
@@ -26,6 +26,8 @@ const DriversDetail = ({carInfoData, driverInfoData}: { carInfoData: ICarInfo, d
     };
 
     const [currentCarIndex, setCurrentCarIndex] = useState(0);
+    const [carId, setCarId] = useState(null);
+    const [carDeleteModal, setCarDeleteModal] = useState(false);
 
     const handleNextCar = () => {
         if (carInfoData.answer === '0') {
@@ -39,7 +41,20 @@ const DriversDetail = ({carInfoData, driverInfoData}: { carInfoData: ICarInfo, d
         }
     };
 
-    const handleDeleteCar = useDeleteCar(params.driverId)
+    const deleteCarCloseModal = () => {
+        setCarDeleteModal(false)
+    }
+
+    const handleDeleteDriverCar = useDeleteCar(params.driverId)
+
+    const handleDeleteCar = (carId: number) => {
+        handleDeleteDriverCar(carId);
+        const updatedCars = carInfoData.cars.filter(car => car.carId !== carId);
+        const updatedCurrentCarIndex = currentCarIndex >= updatedCars.length ? 0 : currentCarIndex;
+
+        setCurrentCarIndex(updatedCurrentCarIndex);
+        setCarDeleteModal(false)
+    };
 
     return (
         <div className="container mx-auto sm:max-w-6xl flex flex-col sm:flex-row gap-3 sm:gap-5">
@@ -128,7 +143,7 @@ const DriversDetail = ({carInfoData, driverInfoData}: { carInfoData: ICarInfo, d
                             ) }
                             <div className={ s.borderContainer }>
                                 Дата принятия: <span
-                                className={ s.bodyText }>{ driverInfoData.hireDate && driverInfoData.hireDate.split('T')[0].split('-').reverse().join('.') }</span>
+                                className={ s.bodyText }>{ driverInfoData.hireDate && formatDate(driverInfoData.hireDate) }</span>
                             </div>
                         </div>
                     </div>
@@ -199,13 +214,18 @@ const DriversDetail = ({carInfoData, driverInfoData}: { carInfoData: ICarInfo, d
                                                         Добавить автомобиль
                                                     </button>
                                                     <button
-                                                        onClick={ () => handleDeleteCar(car.carId) }
-                                                        className={ `w-11/12 mt-3 mx-auto ${ s.easeInOut } ${s.buttonRed}` }>
+                                                        onClick={ () => {
+                                                            setCarId(car.carId)
+                                                            setCarDeleteModal(true)
+                                                        }
+                                                        }
+                                                        className={ `w-11/12 mt-3 mx-auto ${ s.easeInOut } ${ s.buttonRed }` }>
                                                         Удалить автомобиль
                                                     </button>
                                                 </div>
                                                 <p className="text-center mt-4">Всего
-                                                    автомобилей: <span className='font-bold'>{ carInfoData.cars.length }</span> </p>
+                                                    автомобилей: <span
+                                                        className='font-bold'>{ carInfoData.cars.length }</span></p>
                                             </div>
                                         )
                                     )) }
@@ -243,6 +263,14 @@ const DriversDetail = ({carInfoData, driverInfoData}: { carInfoData: ICarInfo, d
 
                 </div>
             </div>
+            { carDeleteModal && <DeleteItemModal
+                open={ carDeleteModal }
+                onClose={ deleteCarCloseModal }
+                itemId={ carId }
+                title='Удаление автомобиля'
+                subtitle='Вы точно хотите удалить автомобиль?'
+                handleDeleteItem={ handleDeleteCar }
+            /> }
             { isCreateNewCarModal && <CreateNewCarModal isCreateNewCarModal={ isCreateNewCarModal }
                                                         setIsCreateNewCarModal={ setIsCreateNewCarModal }/> }
         </div>

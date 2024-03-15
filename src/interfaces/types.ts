@@ -8,6 +8,7 @@ export type IGetAgentId = {
     agentId: number
     admin: 1 | -1
     answer: string
+    myCouriers: 1 | -1
 }
 
 export type ILoginResponse = {
@@ -24,6 +25,16 @@ export type IPaymentsAgent = {
     payments_total: number
     payments: [IPayments]
 }
+export type ICafeList = {
+    answer: string
+    total: number
+    cafes: [ICafe]
+}
+export type ICafe = {
+    id: number
+    name: string
+    legalName: string
+}
 export type IPayments = {
     paymentId: string
     dateRequestPayment: string
@@ -38,10 +49,23 @@ export type IAllDrivers = {
     total: number
     drivers: [IDriver]
 }
+export type IAllAgent = {
+    answer: string
+    total: number
+    arg: number
+    agents: [IAgent]
+}
+
+export type IAgent = {
+    agentId: number
+    city: string
+    name: string
+    legalName: string
+    inn: string
+}
 
 export type IAddEditDriver = {
     editid?: string;
-    remove?: string;
     surname: string;
     name: string;
     patronymic?: string;
@@ -52,15 +76,34 @@ export type IAddEditDriver = {
     driverLicenceCountry: string;
     driverLicenceDate: string;
     driverExpDate?: string;
-    workUsl: string;
+    workUsl: string
     inn?: string;
     ogrn?: string;
     ogrnip?: string;
+    status: 2 | 1 | -1
     restrictOrders: string;
-    restrictOrdersTime1?: string;
-    restrictOrdersTime2?: string;
+    restrictOrdersTimes: string
     restrictPayments: string;
     restrictPaymentsPercent?: string;
+};
+export type IAddEditAgent = {
+    editid?: string;
+    city: string;
+    name: string;
+    legalName: string;
+    workUsl: string
+    inn: string;
+    ogrn?: string;
+    ogrnip?: string;
+    addressLegal: string;
+    addressFact: string;
+    addressMail: string;
+    email: string;
+    telephoneCeo: string;
+    telephoneCommon: string;
+    myCouriers: number;
+    myCouriersCategory: 'food' | 'product'
+    block: 1 | -1
 };
 
 export type IDriverInfo = {
@@ -76,15 +119,14 @@ export type IDriverInfo = {
     driverLicenceCountry: string;
     driverLicenceDate: string;
     driverExpDate?: string;
-    workUsl: string;
+    workUsl: 'self' | 'fiz' | 'ip' | 'ООО'
     inn?: string;
     ogrn?: string;
     ogrnip?: string;
     hireDate: string
     lastOrderDate: string
     restrictOrders: string;
-    restrictOrdersTime1?: string;
-    restrictOrdersTime2?: string;
+    restrictOrdersTimes: string
     restrictPayments: string;
     restrictPaymentsPercent?: string;
 }
@@ -113,7 +155,7 @@ export type IDriver = {
     name: string
     patronymic: string
     telephone: string
-    workUsl: 'self' | 'fiz' | 'ip' | 'OOO'
+    workUsl: 'self' | 'fiz' | 'ip' | 'ООО'
     status: -1 | 1 | 2
     state: 1 | 2 | 3
     balance: number

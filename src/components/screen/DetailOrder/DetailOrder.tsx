@@ -126,7 +126,7 @@ const DetailOrder = ({data}: DetailOrderProps) => {
                 </div>
                 <div className={ s.borderContainer }>
                     Тип оплаты: { ' ' } <span
-                    className={ s.bodyText }>{ data.paymentMethod === 'sbp' || data.paymentMethod === 'acquiring' && 'Безналично' || data.paymentMethod == 'done' && 'Уже оплачено' }</span>
+                    className={ s.bodyText }>{ (data.paymentMethod === 'sbp' || data.paymentMethod === 'acquiring') && 'Безналично' || data.paymentMethod == 'done' && 'Уже оплачено' }</span>
                 </div>
                 <div className={ s.borderContainer }>
                     Общая стоимость:{ ' ' }

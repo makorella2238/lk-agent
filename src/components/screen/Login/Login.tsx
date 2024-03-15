@@ -2,7 +2,7 @@
 
 import {useForm} from "react-hook-form"
 import {ILogin} from "@/interfaces/types";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {LoginMutation} from "@/hooks/login/login";
 import s from '@/components/ui/genetal-css/general.module.css'
 import {useSelector} from "react-redux";
@@ -23,6 +23,21 @@ const LoginForm = () => {
         const {password, login} = data
         handleLogin({login, password})
     }
+
+    useEffect(() => {
+        const handleKeyPress = (event: { key: string; preventDefault: () => void; }) => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                handleSubmit(onSubmit)();
+            }
+        };
+
+        document.addEventListener("keypress", handleKeyPress);
+
+        return () => {
+            document.removeEventListener("keypress", handleKeyPress);
+        };
+    }, [handleSubmit, onSubmit]);
 
     return (
         <div className="flex justify-center items-center h-screen">

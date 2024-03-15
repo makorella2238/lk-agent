@@ -15,20 +15,24 @@ import {
     TableRow,
     TextField
 } from "@material-ui/core";
-import {useRouter} from "next/navigation";
+import {useParams, useRouter} from "next/navigation";
 import {IAllDriverOrders} from "@/interfaces/types";
 import TableContainer from "@material-ui/core/TableContainer";
 import styles from "@/components/ui/genetal-css/general.module.css";
+import s from "@/components/ui/genetal-css/general.module.css";
 import {renderPagination} from "@/utils/tablePagitaion";
 import {formatDateAndClock} from "@/utils/formateData";
-import s from "@/components/ui/genetal-css/general.module.css";
 import Image from "next/image";
+import {useGetAllOrdersForFiltration} from "@/hooks/drivers/drivers";
+import Preloader from "@/components/Preloader/Preloader";
+import {useQueryClient} from "@tanstack/react-query";
+import {useForm} from "react-hook-form";
 
 type OrderTableMokDataProps = {
-    offset: number
     setOffset: React.Dispatch<React.SetStateAction<number>>
     data: IAllDriverOrders
     pageSize: number
+    offset: number
 }
 
 export const formatCategory = (category: string) => {
@@ -43,8 +47,6 @@ export const formatCategory = (category: string) => {
             return 'Неизвестно';
     }
 };
-
-
 export const getStatusLabel = (status: number) => {
     switch (status) {
         case -4:
@@ -73,78 +75,42 @@ export const getStatusLabel = (status: number) => {
 };
 
 const OrderTable = ({data, pageSize, setOffset, offset}: OrderTableMokDataProps) => {
+    const {register, handleSubmit, watch, reset} = useForm()
+
+    const queryClient = useQueryClient();
+
     const router = useRouter();
+    const params = useParams()
 
-    // @ts-ignore
-    const total = data.total;
+    const total = data.total
     const [openModal, setOpenModal] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [carFilter, setCarFilter] = useState('');
-    const [statusFilter, setStatusFilter] = useState('');
-    const [categoryFilter, setCategoryFilter] = useState('');
-    const [dateFilter, setDateFilter] = useState({
-        startDate: '',
-        endDate: '',
+    const [enabledFilter, setEnabledFilter] = useState(false);
+    const [filter, setFilter] = useState({
+        filter_carMark: '',
+        filter_carModel: '',
+        filter_status: '',
+        filter_type: '',
+        filter_dateTimeCourierDone1: '',
+        filter_dateTimeCourierDone2: '',
     });
-    const [isFilterApplied, setIsFilterApplied] = useState(false); // Добавлено новое состояние
 
-    const getCurrentPageOrders = () => {
-        if (!data || !data.orders) {
-            return []; // Return an empty array if data or orders are undefined
-        }
+    const [currentPage, setCurrentPage] = useState(1);
 
-        let filteredOrders = data.orders; // Define filteredOrders variable
-        if (isFilterApplied) {
-            if (carFilter) {
-                filteredOrders = filteredOrders.filter((order) =>
-                    order.carName.toLowerCase().includes(carFilter.toLowerCase())
-                );
-            }
+    const [isFilterApplied, setIsFilterApplied] = useState(false)
 
-            if (statusFilter) {
-                const status = parseInt(statusFilter);
-                filteredOrders = filteredOrders.filter((order) => order.status === status);
-            }
+    const {
+        data: filtrationData, isFetching: filtrationIsFetching, error: filtrationError
+        // @ts-ignore
+    } = useGetAllOrdersForFiltration(offset, pageSize, params.driverId, enabledFilter, filter.filter_carMark, filter.filter_carModel, filter.filter_status, filter.filter_type, filter.filter_dateTimeCourierDone1, filter.filter_dateTimeCourierDone2)
 
-            if (categoryFilter) {
-                filteredOrders = filteredOrders.filter((order) => order.type === categoryFilter);
-            }
+    if (filtrationIsFetching) {
+        return <Preloader/>
+    }
 
-            if (dateFilter.startDate && dateFilter.endDate) {
-                filteredOrders = filteredOrders.filter((order) => {
-                    const orderDate = new Date(order.dateTimeCourierDone);
-                    const startDate = new Date(dateFilter.startDate);
-                    const endDate = new Date(dateFilter.endDate);
-                    return orderDate >= startDate && orderDate <= endDate;
-                });
-            }
-        }
+    if (filtrationError) {
+        return <p className="text-red-600">Ошибка при получении данных</p>;
+    }
 
-        const startIndex = offset;
-        const endIndex = offset + pageSize;
-
-        return filteredOrders.slice(startIndex, endIndex);
-    };
-
-    const handleCarFilterChange = (event: { target: { value: React.SetStateAction<string> } }) => {
-        setCarFilter(event.target.value);
-    };
-
-    const handleStatusFilterChange = (event: { target: { value: React.SetStateAction<string> } }) => {
-        setStatusFilter(event.target.value);
-    };
-
-    const handleCategoryFilterChange = (event: { target: { value: React.SetStateAction<string> } }) => {
-        setCategoryFilter(event.target.value);
-    };
-
-    const handleDateFilterChange = (event: { target: { name: any; value: any } }) => {
-        const {name, value} = event.target;
-        setDateFilter((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
-    };
 
     const handleChangePage = (page: number) => {
         const newOffset = (page - 1) * pageSize;
@@ -152,27 +118,36 @@ const OrderTable = ({data, pageSize, setOffset, offset}: OrderTableMokDataProps)
         setCurrentPage(page);
     };
 
-    const handleApplyFilter = () => {
-        handleFilter();
-        setIsFilterApplied(true);
+    function handleFilter(data: {
+        enabledFilter: boolean,
+        filter_carMark: string,
+        filter_carModel: string,
+        filter_status: string,
+        filter_type: string,
+        filter_dateTimeCourierDone1: string,
+        filter_dateTimeCourierDone2: string
+    }) {
+        setFilter({...data})
+        setEnabledFilter(true)
+        setIsFilterApplied(true)
         setOpenModal(false)
-    };
+    }
 
-    const handleFilter = () => {
-        setIsFilterApplied(true);
-        setCurrentPage(1);
-        setOpenModal(false)
-    };
     const handleResetFilter = () => {
-        setCarFilter('');
-        setStatusFilter('');
-        setCategoryFilter('');
-        setDateFilter({
-            startDate: '',
-            endDate: '',
-        });
+        reset({
+            filter_carMark: '',
+            filter_carModel: '',
+            filter_status: '',
+            filter_type: '',
+            filter_dateTimeCourierDone1: '',
+            filter_dateTimeCourierDone2: '',
+        })
         setIsFilterApplied(false);
-    };
+        queryClient.invalidateQueries({queryKey: ['getAllOrders']})
+    }
+
+    const filter_statusValue = watch('filter_status')
+    const filter_typeValue = watch('filter_type')
 
     return (
         <div className='mx-5 relative'>
@@ -203,21 +178,25 @@ const OrderTable = ({data, pageSize, setOffset, offset}: OrderTableMokDataProps)
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            { getCurrentPageOrders().length > 0 ? (
-                                getCurrentPageOrders().map((order: any) => (
-                                    <TableRow key={ order.id }
-                                              onClick={ () => router.push(`orders/${ order.id }`) }
-                                              className='hover:bg-gray-100 cursor-pointer'>
-                                        <TableCell>{ order.uid }</TableCell>
-                                        <TableCell>{ order.carName }</TableCell>
-                                        <TableCell>{ order.type && formatCategory(order.type) }</TableCell>
-                                        <TableCell>{ order.dateTimeCourierAccept && formatDateAndClock(order.dateTimeCourierAccept) }</TableCell>
-                                        <TableCell>{ order.dateTimeCourierPickUp && formatDateAndClock(order.dateTimeCourierPickUp) }</TableCell>
-                                        <TableCell>{ order.dateTimeCourierDone && formatDateAndClock(order.dateTimeCourierDone)}</TableCell>
-                                        <TableCell>{ getStatusLabel(order.status) }</TableCell>
-                                    </TableRow>
-                                ))
-                            ) : (
+                            { (isFilterApplied
+                                ? filtrationData && filtrationData.orders && filtrationData.orders.length > 0 && filtrationData.orders
+                                : data && data.orders && data.orders.length > 0 && data.orders)?.map((order: any) => (
+                                <TableRow key={ order.id }
+                                          onClick={ () => router.push(`orders/${ order.id }`) }
+                                          className='hover:bg-gray-100 cursor-pointer'>
+                                    <TableCell>{ order.uid }</TableCell>
+                                    <TableCell>{ order.carName }</TableCell>
+                                    <TableCell>{ order.type && formatCategory(order.type) }</TableCell>
+                                    <TableCell>{ order.dateTimeCourierAccept && formatDateAndClock(order.dateTimeCourierAccept) }</TableCell>
+                                    <TableCell>{ order.dateTimeCourierPickUp && formatDateAndClock(order.dateTimeCourierPickUp) }</TableCell>
+                                    <TableCell>{ order.dateTimeCourierDone && formatDateAndClock(order.dateTimeCourierDone) }</TableCell>
+                                    <TableCell>{ getStatusLabel(order.status) }</TableCell>
+                                </TableRow>
+                            ))
+                            }
+                            { !isFilterApplied
+                                ? (!data || !data.orders || data.orders.length < 1)
+                                : (!filtrationData || !filtrationData.orders || filtrationData.orders.length < 1) && (
                                 <TableRow>
                                     <TableCell colSpan={ 7 } align="center">
                                         Нет данных
@@ -229,97 +208,103 @@ const OrderTable = ({data, pageSize, setOffset, offset}: OrderTableMokDataProps)
                 </Paper>
             </TableContainer>
             { renderPagination(currentPage, total, pageSize, handleChangePage) }
-            <Dialog open={ openModal } onClose={ () => setOpenModal(false) } aria-labelledby="form-dialog-title" onKeyDown={(e) => e.key === 'Enter' && handleFilter() } fullWidth={true}>
+            <Dialog open={ openModal } onClose={ () => setOpenModal(false) } aria-labelledby="form-dialog-title"
+                    onKeyDown={ (e) => e.key === 'Enter' && handleSubmit(handleFilter)()} fullWidth={ true }>
                 <DialogTitle id="form-dialog-title">Фильтр</DialogTitle>
                 <DialogContent>
-                    <div className='mx-5 gap-5'>
-                        <TextField
-                            label="Автомобиль"
-                            value={ carFilter }
-                            onChange={ handleCarFilterChange }
-                            className='w-full'
-                            autoComplete='off'
-                        />
+                    <form onSubmit={ handleSubmit(handleFilter) }>
+                        <div className='mx-5 gap-5'>
+                            <TextField
+                                label="Марка автомобиля"
+                                { ...register('filter_carMark') }
+                                className='w-full'
+                                autoComplete='off'
+                            />
+                            <TextField
+                                label="Модель автомобиля"
+                                { ...register('filter_carModel') }
+                                className='w-full'
+                                autoComplete='off'
+                            />
 
-                        <TextField
-                            select
-                            label="Статус"
-                            value={ statusFilter }
-                            onChange={ handleStatusFilterChange }
-                            className='w-full'
-                        >
-                            <MenuItem value="">Все</MenuItem>
-                            <MenuItem value="-4">Отменён клиентом</MenuItem>
-                            <MenuItem value="-3">Отменён поддержкой сервиса</MenuItem>
-                            <MenuItem value="-2">Отменён курьером</MenuItem>
-                            <MenuItem value="-1">Отменён заведением</MenuItem>
-                            <MenuItem value="0">Опубликован</MenuItem>
-                            <MenuItem value="1">Курьер на пути к точке А</MenuItem>
-                            <MenuItem value="2">Курьер в точке А</MenuItem>
-                            <MenuItem value="3">Забран, на пути в точку Б</MenuItem>
-                            <MenuItem value="4">Курьер в точке Б</MenuItem>
-                            <MenuItem value="5">Отработан</MenuItem>
-                        </TextField>
-                        <div className='mt-5'></div>
-                        <TextField
-                            select
-                            label="Категория"
-                            value={ categoryFilter }
-                            onChange={ handleCategoryFilterChange }
-                            className='w-full'
-                            InputLabelProps={ {
-                                shrink: true,
-                            } }
-                        >
-                            <MenuItem value="">Все</MenuItem>
-                            <MenuItem value="food">Еда</MenuItem>
-                            <MenuItem value="product">Товар</MenuItem>
-                            <MenuItem value="package">Посылка</MenuItem>
-                        </TextField>
-                        <div className='mt-5'></div>
-                        <TextField
-                            type="date"
-                            label="Начальная дата завершения"
-                            name="startDate"
-                            value={ dateFilter.startDate }
-                            onChange={ handleDateFilterChange }
-                            className='mt-10 w-full'
-                            InputLabelProps={ {
-                                shrink: true,
-                            } }
-                        />
-                        <div className='mt-5'></div>
-                        <TextField
-                            type="date"
-                            label="Конечная дата завершения"
-                            name="endDate"
-                            value={ dateFilter.endDate }
-                            onChange={ handleDateFilterChange }
-                            className='w-full'
-                            InputLabelProps={ {
-                                shrink: true,
-                            } }
-                        />
-                    </div>
+                            <TextField
+                                select
+                                label="Статус"
+                                value={ filter_statusValue }
+                                defaultValue=''
+                                { ...register('filter_status') }
+                                className='w-full'
+                            >
+                                <MenuItem value="">Все</MenuItem>
+                                <MenuItem value="-4">Отменён клиентом</MenuItem>
+                                <MenuItem value="-3">Отменён поддержкой сервиса</MenuItem>
+                                <MenuItem value="-2">Отменён курьером</MenuItem>
+                                <MenuItem value="-1">Отменён заведением</MenuItem>
+                                <MenuItem value="0">Опубликован</MenuItem>
+                                <MenuItem value="1">Курьер на пути к точке А</MenuItem>
+                                <MenuItem value="2">Курьер в точке А</MenuItem>
+                                <MenuItem value="3">Забран, на пути в точку Б</MenuItem>
+                                <MenuItem value="4">Курьер в точке Б</MenuItem>
+                                <MenuItem value="5">Отработан</MenuItem>
+                            </TextField>
+                            <div className='mt-5'></div>
+                            <TextField
+                                select
+                                label="Категория"
+                                value={ filter_typeValue }
+                                defaultValue=''
+                                { ...register('filter_type') }
+                                className='w-full'
+                                InputLabelProps={ {
+                                    shrink: true,
+                                } }
+                            >
+                                <MenuItem value="">Все</MenuItem>
+                                <MenuItem value="food">Еда</MenuItem>
+                                <MenuItem value="product">Товар</MenuItem>
+                                <MenuItem value="package">Посылка</MenuItem>
+                            </TextField>
+                            <div className='mt-5'></div>
+                            <TextField
+                                type="date"
+                                label="Начальная дата завершения"
+                                { ...register('filter_dateTimeCourierDone1') }
+                                className='mt-10 w-full'
+                                InputLabelProps={ {
+                                    shrink: true,
+                                } }
+                            />
+                            <div className='mt-5'></div>
+                            <TextField
+                                type="date"
+                                label="Конечная дата завершения"
+                                { ...register('filter_dateTimeCourierDone2') }
+                                className='w-full'
+                                InputLabelProps={ {
+                                    shrink: true,
+                                } }
+                            />
+                        </div>
+                        <DialogActions>
+                            <div className='flex flex-col sm:flex-row gap-2 sm:gap-5 flex-wrap'>
+                                <button
+                                    className={ `${ styles.BaseButton } ${
+                                        !isFilterApplied ? 'hidden' : ''
+                                    }` }
+                                    onClick={ handleResetFilter }
+                                >
+                                    Сбросить фильтр
+                                </button>
+                                <button className={ styles.BaseButton } onClick={ () => setOpenModal(false) }>
+                                    Отменить
+                                </button>
+                                <button className={ styles.BaseButton } type='submit'>
+                                    Применить
+                                </button>
+                            </div>
+                        </DialogActions>
+                    </form>
                 </DialogContent>
-                <DialogActions>
-                    <div className='flex flex-col sm:flex-row gap-2 sm:gap-5 flex-wrap'>
-                        <button
-                            className={ `${ styles.BaseButton } ${
-                                !isFilterApplied ? 'hidden' : ''
-                            }` }
-                            onClick={ handleResetFilter }
-                        >
-                            Сбросить фильтр
-                        </button>
-                        <button className={ styles.BaseButton } onClick={ () => setOpenModal(false) }>
-                            Отменить
-                        </button>
-                        <button className={ styles.BaseButton } onClick={ handleApplyFilter }>
-                            Применить
-                        </button>
-                    </div>
-                </DialogActions>
             </Dialog>
         </div>
     );

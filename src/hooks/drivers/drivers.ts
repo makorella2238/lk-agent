@@ -7,18 +7,37 @@ import {
     ICarInfo,
     IDriverAnalytic,
     IDriverInfo,
-    IDriverTransactions, IGetAgentId
+    IDriverTransactions,
+    IGetAgentId
 } from "@/interfaces/types";
 import {Dispatch, SetStateAction} from "react";
 import {IOrderDetails} from "@/components/screen/DetailOrder/DetailOrder";
 
-export const useGetAllDrivers = (offset: number, count: number, agentId: number) => {
+export const useGetAllDrivers = (offset: number, count: number) => {
     return useQuery<IAllDrivers>({
             queryKey: ['getAllDrivers'],
             queryFn: async () => {
-                // @ts-ignore
-                return await mainService.getAllDrivers({offset, count, agentId});
+                return await mainService.getAllDrivers({offset, count});
             }
+        }
+    )
+}
+export const useGetAllDriversForFiltration = ( offset: number, count: number, enabledFilter: boolean, filter_surname?: string, filter_name?: string, filter_patronymic?: string, filter_telephone?: string, filter_status?: string, filter_workUsl?: string ) => {
+    return useQuery<IAllDrivers>({
+            queryKey: ['getAllDriversWithFiltration', filter_surname, filter_name, filter_patronymic, filter_telephone, filter_status, filter_workUsl],
+            queryFn: async () => {
+                return await mainService.getAllDrivers({
+                    offset,
+                    count,
+                    filter_name,
+                    filter_surname,
+                    filter_status,
+                    filter_patronymic,
+                    filter_workUsl,
+                    filter_telephone
+                });
+            },
+            enabled: enabledFilter
         }
     )
 }
@@ -30,9 +49,19 @@ export const useGetAllOrders = (offset: number, count: number, driverId: string)
         },
     });
 };
-export const useGetAgentId = () => {
+export const useGetAllOrdersForFiltration = (offset: number, count: number, driverId: string, enabledFilter: boolean, filter_carMark: string, filter_carModel: string, filter_status: string, filter_type: string, filter_dateTimeCourierDone1: string, filter_dateTimeCourierDone2: string) => {
+    return useQuery<IAllDriverOrders>({
+        queryKey: ['getAllOrdersWithFiltration', filter_carModel, filter_carMark, filter_status, filter_dateTimeCourierDone1, filter_dateTimeCourierDone2, filter_type],
+        queryFn: async () => {
+            return await mainService.getAllOrders({offset, count, driverId, filter_carModel, filter_carMark, filter_status, filter_type, filter_dateTimeCourierDone1, filter_dateTimeCourierDone2});
+        },
+        enabled: enabledFilter,
+
+    });
+};
+export const useGetAgentIdAlways = () => {
     return useQuery<IGetAgentId>({
-        queryKey: ['getAllOrders'],
+        queryKey: ['getAgentIdForHeader'],
         queryFn: async () => {
             return await mainService.getAgentId();
         },
@@ -52,6 +81,16 @@ export const useGetDriverAnalytic = (driverId: number, dateFrom: string, dateTo:
             queryKey: ['getDriversAnalytic'],
             queryFn: async () => {
                 return await mainService.getDriverAnalytics({driverId, dateFrom, dateTo});
+            },
+            enabled: enabled
+        }
+    )
+}
+export const useGetAllDriverAnalytics = (dateFrom: string, dateTo: string, enabled: boolean) => {
+    return useQuery<IDriverAnalytic>({
+            queryKey: ['getDriversAnalytic'],
+            queryFn: async () => {
+                return await mainService.getAllDriverAnalytics({dateFrom, dateTo});
             },
             enabled: enabled
         }
@@ -103,6 +142,7 @@ export const useEditDriver = (setRequestErrors: Dispatch<SetStateAction<string>>
         onSuccess: () => {
             setEditDriverLoading(false)
             queryClient.invalidateQueries({queryKey: ['getAllDrivers']})
+            queryClient.invalidateQueries({queryKey: ['getDriverInfo']})
         },
         onError: (error: string) => {
             setRequestErrors(error)
@@ -183,7 +223,7 @@ export const useDeleteDriver = () => {
     }
     return handleDeleteDriver
 }
-export const useDeleteCar = (driverId: string | string[]) => {
+export const useDeleteCar = (driverId: string | string[],) => {
     const queryClient = useQueryClient();
 
     const deleteCarMutation = useMutation({
@@ -196,8 +236,7 @@ export const useDeleteCar = (driverId: string | string[]) => {
             queryClient.invalidateQueries({queryKey: ['getCarInfo']})
         },
     })
-    const handleDeleteCar = (carId: number) => {
+    return (carId: number) => {
         deleteCarMutation.mutate(carId)
     }
-    return handleDeleteCar
 }

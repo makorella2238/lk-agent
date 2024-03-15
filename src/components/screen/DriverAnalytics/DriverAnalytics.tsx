@@ -2,14 +2,13 @@
 
 import React, {useState} from 'react';
 import s from '@/components/ui/genetal-css/general.module.css'
-import styles from './DriverAnalytics.module.css'
 import {useForm} from "react-hook-form";
 import {useGetDriverAnalytic} from "@/hooks/drivers/drivers";
 import {useParams, useRouter} from "next/navigation";
 import {formatPrice} from "@/utils/formateData";
 import Image from "next/image";
 
-type IData = {
+export type IData = {
     dateFrom: string
     dateTo: string
 }
@@ -92,25 +91,25 @@ const DriverAnalytics = () => {
             </form>
             { data && (
                 <div className='flex flex-col justify-center mx-auto w-full sm:w-3/4 md:w-3/5 lg:w-2/5 text-left'>
-                    <div className={ styles.borderContainer }>
+                    <div className={ s.borderContainer }>
                         Завершенных доставок:
-                        <span className={ styles.bodyText }>{ ' ' }{ data.orderCompeled }</span>
+                        <span className={ s.bodyText }>{ ' ' }{ data.orderCompeled }</span>
                     </div>
-                    <div className={ styles.borderContainer }>
+                    <div className={ s.borderContainer }>
                         Отмененных доставок:
-                        <span className={ styles.bodyText }>{ ' ' }{ data.orderCanceled }</span>
+                        <span className={ s.bodyText }>{ ' ' }{ data.orderCanceled }</span>
                     </div>
-                    <div className={ styles.borderContainer }>
+                    <div className={ s.borderContainer }>
                         Заработок Курьера:
-                        <span className={ styles.bodyText }>{ ' ' }{ formatPrice(data.incomeCourier) }</span>
+                        <span className={ s.bodyText }>{ ' ' }{ formatPrice(data.incomeCourier) }</span>
                     </div>
-                    <div className={ styles.borderContainer }>
+                    <div className={ s.borderContainer }>
                         Заработок Агента:
-                        <span className={ styles.bodyText }>{ ' ' }{ formatPrice(data.incomeAgent) }</span>
+                        <span className={ s.bodyText }>{ ' ' }{ formatPrice(data.incomeAgent) }</span>
                     </div>
-                    <div className={ styles.borderContainer }>
+                    <div className={ s.borderContainer }>
                         Работа сервиса:
-                        <span className={ styles.bodyText }>{ ' ' }{ formatPrice(data.incomeService) }</span>
+                        <span className={ s.bodyText }>{ ' ' }{ formatPrice(data.incomeService) }</span>
                     </div>
                 </div>
             ) }

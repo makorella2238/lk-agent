@@ -1,12 +1,15 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {SubmitHandler, useForm} from "react-hook-form";
 import s from "@/components/ui/genetal-css/general.module.css";
-import Image from "next/image";
 import {IAddEditDriver, inputField} from "@/interfaces/types";
-import {useEditDriver, useGetDriversInfo} from "@/hooks/drivers/drivers";
+import {
+    useEditDriver, useGetAgentIdAlways,
+    useGetDriversInfo
+} from "@/hooks/drivers/drivers";
 import Preloader from "@/components/Preloader/Preloader";
 import {inputFields} from "@/components/CreateNewDriver/CreateNewDriver";
 import {Dialog, DialogContent, DialogTitle} from "@material-ui/core";
+import TimeRestrictions from "@/components/ui/TimeRestrictions/TimeRestrictions";
 
 interface CreateNewDriverProps {
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
@@ -29,11 +32,17 @@ const EditDriver = ({
     } = useForm<IAddEditDriver>();
 
     const {data, isFetching, error} = useGetDriversInfo(driverId)
+    const {data: agentIdData, isLoading: agentIdFetching, error: agentIdError} = useGetAgentIdAlways()
+
+    if (error || agentIdError) {
+        return <p className="text-red-600">Ошибка при получении данных</p>;
+    }
+
     useEffect(() => {
         if (data) {
             setValue("surname", data.surname);
             setValue("name", data.name);
-            setValue("patronymic", data.patronymic);
+            setValue("patronymic", data.patronymic && data.patronymic);
             setValue("dateBirth", data.dateBirth && data.dateBirth.split('T')[0]);
             setValue("telephone", data.telephone);
             setValue("driverLicenceSeries", data.driverLicenceSeries);
@@ -41,23 +50,19 @@ const EditDriver = ({
             setValue("driverLicenceCountry", data.driverLicenceCountry);
             setValue("driverLicenceDate", data.driverLicenceDate && data.driverLicenceDate.split('T')[0]);
             setValue("driverExpDate", data.driverExpDate && data.driverExpDate.split('T')[0]);
+            setValue('status', data.status);
             setValue('restrictPayments', data.restrictPayments);
             if (data.restrictPayments === 'percent') {
                 setValue('restrictPaymentsPercent', data.restrictPaymentsPercent);
             }
-            setValue("restrictOrdersTime1", data.restrictOrdersTime1 && data.restrictOrdersTime1.split('T')[0] || "");
-            setValue("restrictOrdersTime2", data.restrictOrdersTime2 && data.restrictOrdersTime2.split('T')[0] || "");
+            setValue("restrictOrdersTimes", data.restrictOrdersTimes && data.restrictOrdersTimes);
             setValue('workUsl', data.workUsl);
-            setValue('restrictOrders', data.restrictOrders);
+            setValue('restrictOrders', data.restrictOrders && data.restrictOrders);
             setValue("inn", data.inn || "");
             setValue("ogrnip", data.ogrnip || "");
             setValue("ogrn", data.ogrn || "");
         }
     }, [data, setValue]);
-
-    if (error) {
-        return <p className="text-red-600">Ошибка при получении данных</p>;
-    }
 
     const [editDriverLoading, setEditDriverLoading] = useState(false);
 
@@ -71,6 +76,21 @@ const EditDriver = ({
             driverExpDate: requestData.driverExpDate.split('.').reverse().join('-'),
             driverLicenceDate: requestData.driverLicenceDate.split('.').reverse().join('-')
         };
+        if(!restrictOrdersTimes) {
+            delete formattedData.restrictOrdersTimes
+        }
+        if (!formattedData.ogrnip) {
+            delete formattedData.ogrnip
+        }
+        if (!formattedData.patronymic) {
+            delete formattedData.patronymic
+        }
+        if (!formattedData.ogrn) {
+            delete formattedData.ogrn
+        }
+        if (!formattedData.inn) {
+            delete formattedData.inn
+        }
         if (driverId != null) {
             handleEditDriver(formattedData, String(driverId))
         }
@@ -81,6 +101,7 @@ const EditDriver = ({
     const workUslValue = watch("workUsl");
     const restrictPayments = watch("restrictPayments");
     const restrictOrders = watch("restrictOrders");
+    const restrictOrdersTimes = watch("restrictOrdersTimes");
 
     function handleCloseModal() {
         setIsModalOpen(false);
@@ -97,8 +118,7 @@ const EditDriver = ({
             driverExpDate: '',
             restrictPayments: '',
             restrictPaymentsPercent: '',
-            restrictOrdersTime1: '',
-            restrictOrdersTime2: '',
+            restrictOrdersTimes: '',
             workUsl: '',
             restrictOrders: '',
             inn: '',
@@ -133,6 +153,22 @@ const EditDriver = ({
                                         />
                                     </div>
                                 )) }
+
+                                <div className="col-span-2">
+                                    <label htmlFor="status" className="text-xs sm:text-base block mb-1 sm:font-bold">
+                                        Статус
+                                    </label>
+                                    <select
+                                        id="status"
+                                        { ...register("status", {required: true}) }
+                                        className="border border-gray-300 p-2 rounded-lg w-full"
+                                    >
+                                        <option value="">Выберите статус</option>
+                                        <option value="2">Работает</option>
+                                        <option value="1">Уволен</option>
+                                        { agentIdData.admin === 1 && <option value="-1">Заблокирован</option>}
+                                    </select>
+                                </div>
 
                                 <div className="mt-2 sm:mt-0 col-span-2">
                                     <label htmlFor="restrictPayments" className="text-xs sm:text-base block mb-1 sm:font-bold">
@@ -179,34 +215,9 @@ const EditDriver = ({
                                     </select>
                                 </div>
 
-                                { restrictOrders === 'my_times' && (
-                                    <div className='grid grid-cols-2 gap-2'>
-                                        <div className="col-span-2">
-                                            <label htmlFor='restrictOrdersTime1' className='text-xs sm:text-base sm:font-bold'>Время
-                                                ОТ</label>
-                                            <input
-                                                { ...register("restrictOrdersTime1", {
-                                                    required: true,
-                                                }) }
-                                                type="date"
-                                                placeholder="Время ОТ"
-                                                className="border border-gray-300 p-2 rounded-lg w-full"
-                                            />
-                                        </div>
-                                        <div className="col-span-2">
-                                            <label htmlFor='restrictOrdersTime2' className='text-xs sm:text-base sm:font-bold'>Время
-                                                ДО</label>
-                                            <input
-                                                { ...register("restrictOrdersTime2", {
-                                                    required: true,
-                                                }) }
-                                                type="date"
-                                                placeholder="Время ДО"
-                                                className="border border-gray-300 p-2 rounded-lg w-full"
-                                            />
-                                        </div>
-                                    </div>
-                                ) }
+                                {restrictOrders === 'my_times' && (
+                                    <TimeRestrictions restrictOrdersTimes={restrictOrdersTimes} setValue={setValue} />
+                                )}
 
                                 <div className="col-span-2">
                                     <label htmlFor="workUsl" className="text-xs sm:text-base block mb-1 sm:font-bold">
@@ -220,13 +231,13 @@ const EditDriver = ({
                                         <option value="">Выберите условия работы</option>
                                         <option value="self">Самозанятый</option>
                                         <option value="ip">ИП</option>
-                                        <option value="ООО">ООО</option>
+                                        <option value="ooo">ООО</option>
                                         <option value="fiz">Физлицо</option>
                                     </select>
                                 </div>
                                 { (workUslValue === "self" ||
                                     workUslValue === "ip" ||
-                                    workUslValue === "ООО") && (
+                                    workUslValue === "ooo") && (
                                     <div className='flex flex-col'>
                                         <label htmlFor='inn' className='text-xs sm:text-base sm:font-bold'>ИНН</label>
                                         <input
@@ -248,7 +259,7 @@ const EditDriver = ({
                                         />
                                     </div>
                                 ) }
-                                { (workUslValue === "ООО") && (
+                                { (workUslValue === "ooo") && (
                                     <div className='flex flex-col'>
                                         <label htmlFor='ogrn' className='text-xs sm:text-base sm:font-bold'>ОГРН</label>
                                         <input
@@ -270,7 +281,7 @@ const EditDriver = ({
                                 </button>
                             </div>
                         </form>
-                        { editDriverLoading || isFetching && <Preloader/> }
+                        { editDriverLoading || isFetching || agentIdFetching && <Preloader/> }
                     </div>
             </DialogContent>
         </Dialog>

@@ -51,6 +51,24 @@
   min-width: 200px;
 }
 
+
+.buttonContainer {
+  display: flex;
+  gap: 8px;
+}
+
+.editButton {
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  padding: 8px;
+}
+
+.deleteButton {
+  background-color: #ffcdd2;
+  border-radius: 4px;
+  padding: 8px;
+}
+
 .filter_container {
   display: flex;
   align-items: center;
@@ -59,7 +77,7 @@
 }
 
 .borderContainer {
-  @apply px-2 py-1 text-lg text-gray-700 mb-2 border-2
+  @apply px-2 py-1 text-base sm:text-lg text-gray-700 mb-2 border-2
 }
 .miniBorderContainer {
   @apply pl-2 py-1 text-lg text-gray-700 mb-1 border
